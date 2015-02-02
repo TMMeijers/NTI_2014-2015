@@ -6,6 +6,7 @@ Created on Mon Feb  2 20:34:12 2015
 """
 
 from argparse import ArgumentParser
+from collections import OrderedDict
 
 def read_file(file_in, n):
     """
@@ -18,9 +19,24 @@ def read_file(file_in, n):
     
     with open(file_in) as f:
         for line in f:
-            print line
+            splitted_line = line.split()
+            #print splitted_line
+            for word in splitted_line:
+                #print word
+                if word in n_grams_frequency.keys():
+                    n_grams_frequency[word] += 1
+                else:
+                    n_grams_frequency[word] = 1
             
     return n_grams_frequency
+    
+def print_ngrams(n_grams, m = None):
+    idx = 0
+    for word, freq in n_grams.items():
+        if idx is m:
+            break
+        idx += 1
+        print '{} {}'.format(word, freq)
     
 if __name__ == "__main__":
     # here code for program
@@ -32,3 +48,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
     
     n_grams_frequency = read_file(args.input_file, args.n)
+    
+    # sort n_grams by value in descending order
+    n_grams_frequency = OrderedDict(sorted(n_grams_frequency.items(), key=lambda x: x[1], reverse=True))
+    
+    print_ngrams(n_grams_frequency, args.m)
