@@ -13,38 +13,51 @@ from string import join
 
 
 def make_grams(words, n):
-	n_grams = []
-	for i in range(len(words)-n+1):
-		n_grams.append(join(words[i:i+n]))
-	return n_grams
+    """
+    make n-grams from list of words
+    """
+    
+    n_grams = []
+    for i in range(len(words)-n+1):
+        n_grams.append(join(words[i:i+n]))
+    
+    return n_grams
 
+def slurp(file_in):
+    """
+    slurps entire file_in into string
+    """
+    
+    corpus = ''
+    with open(file_in) as f:
+        corpus = f.read()
+    return corpus
 
-def read_file(file_in, n):
-	"""
-	reads file_in line by line.
-	
-	returns: map of n-grams with frequency count
-	"""
-	n_grams_frequency = {}    
-	if n < 1:
-		return n_grams_frequency
-	with open(file_in) as f:
-		corpus = ''
-		for line in f:
-			corpus +=  line
-			corpus += ' ' 
-		splitted_line = corpus.split()
-		if n > 1:
-			splitted_line = make_grams(splitted_line, n)
-		for word in splitted_line:
-			#print word
-			if word in n_grams_frequency.keys():
-				n_grams_frequency[word] += 1
-			else:
-				n_grams_frequency[word] = 1
-	return n_grams_frequency
+def parse_ngrams(file_in, n):
+    """
+    parses a file and makes (unsorted) frequency table of n-grams
+    """
+    
+    n_grams_frequency = {}    
+    if n < 1:
+        return n_grams_frequency
+        
+    splitted_line = slurp(file_in).split()
+    if n > 1:
+        splitted_line = make_grams(splitted_line, n)
+    for word in splitted_line:
+        if word in n_grams_frequency.keys():
+            n_grams_frequency[word] += 1
+        else:
+            n_grams_frequency[word] = 1
+                
+    return n_grams_frequency
     
 def print_ngrams(n_grams, m = None):
+    """
+    prints n grams 
+    """
+    
     idx = 0
     for word, freq in n_grams.items():
         if idx is m:
@@ -61,7 +74,7 @@ if __name__ == "__main__":
     parser.add_argument('-m', dest='m', type=int, default=None, help='Number of n-grams to show in output')
     args = parser.parse_args()
     
-    n_grams_frequency = read_file(args.input_file, args.n)
+    n_grams_frequency = parse_ngrams(args.input_file, args.n)
     
     # sort n_grams by value in descending order
     n_grams_frequency = OrderedDict(sorted(n_grams_frequency.items(), key=lambda x: x[1], reverse=True))
