@@ -4,7 +4,7 @@
 """
 Created on Mon Feb  2 20:34:12 2015
 
-@author: markus, cornelis & thomas
+@author: markus
 """
 
 from argparse import ArgumentParser
