@@ -77,6 +77,7 @@ if __name__ == "__main__":
     n_grams_frequency = parse_ngrams(args.input_file, args.n)
     
     freq_sum = sum(n_grams_frequency.values())
+    print 'sum: {}'.format(freq_sum)
     
     # sort n_grams by value in descending order
     n_grams_frequency = OrderedDict(sorted(n_grams_frequency.items(), key=lambda x: x[1], reverse=True))
