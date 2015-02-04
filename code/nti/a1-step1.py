@@ -9,29 +9,24 @@ Created on Mon Feb  2 20:34:12 2015
 
 from argparse import ArgumentParser
 from collections import OrderedDict
-from string import join
-
+from collections import Counter
+import string
 
 def make_grams(words, n):
     """
     make n-grams from list of words
     """
     
-    n_grams = []
-    for i in range(len(words)-n+1):
-        n_grams.append(join(words[i:i+n]))
-    
-    return n_grams
+    return [string.join(words[i:i+n]) for i in xrange(len(words)-n+1)]
 
-def slurp(file_in):
+def read_words(file_in):
     """
-    slurps entire file_in into string
+    returns list of all words in file_in
     """
     
-    corpus = ''
     with open(file_in) as f:
-        corpus = f.read()
-    return corpus
+        return [w for w in f.read().split()]
+
 
 def parse_ngrams(file_in, n):
     """
@@ -42,16 +37,10 @@ def parse_ngrams(file_in, n):
     if n < 1:
         return n_grams_frequency
         
-    splitted_line = slurp(file_in).split()
+    splitted_line = read_words(file_in)
     if n > 1:
         splitted_line = make_grams(splitted_line, n)
-    for word in splitted_line:
-        if word in n_grams_frequency.keys():
-            n_grams_frequency[word] += 1
-        else:
-            n_grams_frequency[word] = 1
-                
-    return n_grams_frequency
+    return Counter(splitted_line)
     
 def print_ngrams(n_grams, m = None):
     """
