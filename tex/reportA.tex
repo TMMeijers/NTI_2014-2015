@@ -1,3 +1,4 @@
+
 \documentclass[final,12pt]{elsarticle}
 \usepackage{amssymb}
 \usepackage{amsmath}
@@ -5,26 +6,51 @@
 \usepackage{hyperref}
 
 \begin{document}
+\makeatletter
+\long\def\MaketitleBox{%
+  \resetTitleCounters
+  \def\baselinestretch{1}%
+  \begin{center}%
+   \def\baselinestretch{1}%
+    \Large\@title\par\vskip18pt
+    \normalsize\elsauthors\par\vskip10pt
+    \footnotesize\itshape\elsaddress\par\vskip36pt
+%    \hrule\vskip12pt
+%    \ifvoid\absbox\else\unvbox\absbox\par\vskip10pt\fi
+%    \ifvoid\keybox\else\unvbox\keybox\par\vskip10pt\fi
+%    \hrule\vskip12pt
+    \end{center}%
+  }
+\makeatother
+
+\makeatletter
+\def\ps@pprintTitle{%
+  \let\@oddhead\@empty
+  \let\@evenhead\@empty
+  \def\@oddfoot{\reset@font\hfil\thepage\hfil}
+  \let\@evenfoot\@oddfoot
+}
+\makeatother
+
 \begin{frontmatter}
-\title{Natural Language Models and Interfaces: \\ Assignment Part A}
-\author{Cornelis Boon - 10561145} 
-\author{Markus Pfundstein - 10452397}
-\author{Thomas Meijers - 10647023}
+\title{Natural Language Models and Interfaces: \\ Assignment Part A, Step 1}
+\author{Cornelis~Boon~-~10561145} 
+\author{Markus~Pfundstein~-~10452397}
+\author{Thomas~Meijers~-~10647023}
 
 \begin{abstract}
 \end{abstract}
 \end{frontmatter}
 \newpage
 
-\section{Introduction}
-\subsection{Problem}
+%\section{Introduction}
+%\subsection{Problem}
 
-\subsection{Research Question}
-\section{Methods}
-\section{Results}
-\subsection{Step 1}
-\subsubsection{10 most frequent sequences}
-\textbf{for n = 1:}
+%\subsection{Research Question}
+%\section{Methods}
+%\section{Results}
+\section{10 most frequent n-gram sequences}
+\textbf{for n = 1}
 \begin{itemize}
 \item the 20829
 \item to 20042
@@ -37,6 +63,7 @@
 \item in 9182 
 \item it 7573
 \end{itemize}
+
 \textbf{for n =2}
 \begin{itemize}
 \item of the 2507
@@ -50,19 +77,21 @@
 \item she had 978
 \item to her 964
 \end{itemize}
+
 \textbf{for n =3}
 \begin{itemize}
-\item 
-\item
-\item
-\item
-\item
-\item
-\item
-\item
-\item
+\item I do not 378
+\item I am sure 366
+\item in the world 214
+\item she could not 202
+\item would have been 189
+\item I dare say 174
+\item a great deal 173
+\item as soon as 173
+\item it would be 171
+\item could not be 155
 \end{itemize}
-\subsubsection{Sum of all frequencies}
+\section{Sum of all frequencies}
 \begin{itemize}
 \item \textbf{For n = 1}\\
 Sum of frequencies = 617091
@@ -71,13 +100,18 @@ Sum of frequencies = 617090
 \item \textbf{For n = 3}\\
 Sum of frequencies = 617089
 \end{itemize}
-\subsubsection{Compile and run instructions}
-In your terminal run:\\
-python a1-step1.py <X> -n <Y> -m <Z>\\
-Where:\\
-X = path of the input text file (e.g. data/austen.txt)
-Y = $n$, the order of n-grams
-Z = The number of $m$ most frequencies that need to be displayed.
-\section{Discussion}
-\subsection{Conclusions}
+\section{Compile and run instructions}
+In your terminal run:
+\begin{verbatim}
+python a1-step1.py FILE -n N [-m M]\\
+\end{verbatim}
+
+where:\\
+\begin{itemize}
+\item[] FILE = path of the input text file (e.g., data/austen.txt)
+\item[] N = $n$, the n-gram order
+\item[] M = The amount of $m$ most frequences that you want to have displayed
+\end{itemize}
+%\section{Discussion}
+%\subsection{Conclusions}
 \end{document}
