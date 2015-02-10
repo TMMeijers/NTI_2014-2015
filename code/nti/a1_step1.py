@@ -28,7 +28,7 @@ def read_words(file_in):
         return [w for w in f.read().split()]
 
 
-def parse_ngrams(file_in, n):
+def parse_ngrams(splitted_line, n):
     """
     parses a file and makes (unsorted) frequency table of n-grams
     """
@@ -37,7 +37,6 @@ def parse_ngrams(file_in, n):
     if n < 1:
         return n_grams_frequency
         
-    splitted_line = read_words(file_in)
     if n > 1:
         splitted_line = make_grams(splitted_line, n)
     return Counter(splitted_line)
@@ -63,7 +62,8 @@ if __name__ == "__main__":
     parser.add_argument('-m', dest='m', type=int, default=None, help='Number of n-grams to show in output')
     args = parser.parse_args()
     
-    n_grams_frequency = parse_ngrams(args.input_file, args.n)
+    lines = read_words(args.input_file)
+    n_grams_frequency = parse_ngrams(lines, args.n)
     
     freq_sum = sum(n_grams_frequency.values())
     print 'sum: {}'.format(freq_sum)
