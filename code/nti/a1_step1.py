@@ -12,6 +12,10 @@ from collections import OrderedDict
 from collections import Counter
 import string
 
+def sort_ngrams(ngrams):
+    return OrderedDict(sorted(ngrams.items(), key=lambda x: x[1], reverse=True))
+
+ 
 def make_grams(words, n):
     """
     make n-grams from list of words
@@ -69,6 +73,6 @@ if __name__ == "__main__":
     print 'sum: {}'.format(freq_sum)
     
     # sort n_grams by value in descending order
-    n_grams_frequency = OrderedDict(sorted(n_grams_frequency.items(), key=lambda x: x[1], reverse=True))
+    n_grams_frequency = sort_ngrams(n_grams_frequency)
     
     print_ngrams(n_grams_frequency, args.m)

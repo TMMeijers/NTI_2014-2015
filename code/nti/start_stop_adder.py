@@ -8,7 +8,6 @@ Created on Tue Feb 10 10:52:24 2015
 from __future__ import print_function
 from argparse import ArgumentParser
 
-
 #%%
 def add_start_stop(in_file):
     line_count = 0 # current line
