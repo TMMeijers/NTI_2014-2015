@@ -107,8 +107,8 @@ if __name__ == "__main__":
     sentences = get_sentences(add_start_stop(args.input_file))
 
     # this is fastest way that I have found to merge Counters
-    # not that is necessary to avoid bigram STOP START. We want
-    # to consider each sentence solely
+    # note that this step is necessary to avoid the n-gram with STOP START. 
+    # We want to consider each sentence solely
     n_grams = reduce(lambda a,b: a.update(b) or a, 
                      [parse_ngrams(sen, args.n) for sen in sentences])
     n_min_1_grams = reduce(lambda a,b: a.update(b) or a,
@@ -119,13 +119,14 @@ if __name__ == "__main__":
     if not n_min_1_grams:
         n_min_1_grams = Counter()
 
-    # when conditional prob file is NOT given, print 10 most bigrams
+    # if wished, print m most bigrams
     if args.m:
         print('n-grams:')
         print_ngrams(sort_ngrams(n_grams), args.m)
         print('\n(n-1)-grams')
         print_ngrams(sort_ngrams(n_min_1_grams), args.m)
         
+    # if cond file is given calculate probabilities
     if args.cond_file:
         probs = calc_probabilities_cond_file(args.cond_file, args.n, n_grams, n_min_1_grams)
         print(probs)
