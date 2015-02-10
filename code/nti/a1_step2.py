@@ -53,12 +53,16 @@ if __name__ == "__main__":
     # get list of lines with START and STOP added
     ss = add_start_stop(args.input_file)
     # split and flatten array
+    # sentences is list of sentences that start with START and end with STOP
     sentences = get_sentences(ss)
 
     def update_in_place(a,b):
         a.update(b)
         return a
 
+    # this is fastest way that I have found to merge Counters
+    # not that is necessary to avoid bigram STOP START. We want
+    # to consider each sentence solely
     n_grams = reduce(update_in_place, [parse_ngrams(sen, args.n) for sen in sentences])
     n_min_1_grams = reduce(update_in_place, [parse_ngrams(sen, args.n - 1) for sen in sentences])
 
