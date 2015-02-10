@@ -54,18 +54,14 @@ if __name__ == "__main__":
     ss = add_start_stop(args.input_file)
     # split and flatten array
     sentences = get_sentences(ss)
-    
-    # statistics for all sentences
-    n_grams = Counter()
-    n_min_1_grams = Counter()
-    for sen in sentences:
-        n_grams += parse_ngrams(sen, args.n)
-        n_min_1_grams += parse_ngrams(sen, args.n - 1)
 
-    # create n-grams and (n - 1)-grams
-    #n_grams = parse_ngrams(start_stop_lines, args.n)
-    #n_min_1_grams = parse_ngrams(start_stop_lines, args.n - 1)
-    
+    def update_in_place(a,b):
+        a.update(b)
+        return a
+
+    n_grams = reduce(update_in_place, [parse_ngrams(sen, args.n) for sen in sentences])
+    n_min_1_grams = reduce(update_in_place, [parse_ngrams(sen, args.n - 1) for sen in sentences])
+
     # when conditional prob file is NOT given, print 10 most bigrams
     if args.m:
         print('n-grams:')
