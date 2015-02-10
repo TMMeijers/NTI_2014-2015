@@ -93,12 +93,12 @@ if __name__ == "__main__":
     
     parser = ArgumentParser(description='Assignment A, Step 1')
     parser.add_argument('-corpus', dest ='input_file', type=str, help='Path to corpus file')
-    parser.add_argument('-n', dest='n', type=int, help='Length of word-sequences to process (n-grams)')
+    parser.add_argument('-n', dest='n', type=int, help='Length of word-sequences to process (n-grams) [1,inf]')
     parser.add_argument('-m', dest='m', type=int, default=None, help='Number of n-grams to show in output')
     parser.add_argument('-conditional-prob-file', dest='cond_file', type=str, help='file for conditional probabilities')
     args = parser.parse_args()
     
-    if not args.input_file or not args.n:
+    if not args.input_file or not args.n or args.n < 1:
         parser.print_help()
         exit(1)
     
