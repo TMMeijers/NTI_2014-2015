@@ -32,7 +32,7 @@ def product(lst):
 #%%
 def seq_prob(w_all, n, n_grams, n_min_1_grams):
     
-    m = n - 1 if n > 1 else n
+    m = n - 1# if n > 1 else n
     
     # add START and STOPS
     for i in xrange(0, m):
@@ -41,6 +41,9 @@ def seq_prob(w_all, n, n_grams, n_min_1_grams):
 
     parsed_n_grams = parse_ngrams(w_all, n)
     print(parsed_n_grams)
+
+    if n is 1:
+        return product([rel_prob(ng.split(), n_grams) for ng in parsed_n_grams])
     
     return product([cond_prob(ng.split(), ng.split()[0:-1], n_grams, n_min_1_grams) for ng in parsed_n_grams])
 
