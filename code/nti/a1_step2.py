@@ -23,9 +23,26 @@ def set_permutations(s):
     return [p for p in itertools.permutations(s)]
 
 #%%
-def seq_prob(w_all):
-    print(w_all)
-    return 0
+def product(lst):
+    """
+    calculates product of a list
+    """
+    return reduce(lambda x,y: x*y, lst)
+
+#%%
+def seq_prob(w_all, n, n_grams, n_min_1_grams):
+    
+    m = n - 1 if n > 1 else n
+    
+    # add START and STOPS
+    for i in xrange(0, m):
+        w_all.insert(0, 'START')
+        w_all.append('STOP')
+
+    parsed_n_grams = parse_ngrams(w_all, n)
+    print(parsed_n_grams)
+    
+    return product([cond_prob(ng.split(), ng.split()[0:-1], n_grams, n_min_1_grams) for ng in parsed_n_grams])
 
 #%%
 def rel_prob(w_all, n_grams):
@@ -36,7 +53,7 @@ def rel_prob(w_all, n_grams):
     s = sum(n_grams.values())
     # divison by zero
     if not s:
-        return -1
+        return 0.0
     p_all = n_grams[' '.join(w_all)]
     return float(p_all) / s
 
@@ -48,13 +65,12 @@ def cond_prob(w_all, w_rest, n_grams, n_min_1_grams):
     
     P(w_n|w_1,w)2,...,w_{n-1}) = P(w_1, ..., w_n) / P(w_1, ..., w_{n-1})
     """
-
     p_all = n_grams[' '.join(w_all)]
     p_rest = n_min_1_grams[' '.join(w_rest)]
     
     # avoid division by zero
     if not p_rest:
-        return -1
+        return 0.0
     
     return float(p_all) / p_rest
     
@@ -102,9 +118,9 @@ def get_sentences(ss):
     return sentences
             
 #%%
-def calc_probabilities_seq_file(seq_file):
+def calc_probabilities_seq_file(seq_file, n, n_grams, n_min_1_grams):
     with open(seq_file) as f:
-        return {seq.strip() : seq_prob(seq.split()) for seq in f}
+        return {seq.strip() : seq_prob(seq.split(), n, n_grams, n_min_1_grams) for seq in f}
             
 #%%
 if __name__ == "__main__":
@@ -119,11 +135,14 @@ if __name__ == "__main__":
     
     if not args.input_file or not args.n or args.n < 1:
         parser.print_help()
-        exit(1)
+        exit('Missing required arguments')
     
     # split and flatten array
     # sentences is list of sentences that start with START and end with STOP
-    sentences = get_sentences(add_start_stop(args.input_file))
+    sentences = get_sentences(add_start_stop(args.input_file, args.n if not args.m else 1))
+
+    #print(sentences)
+    
     n_grams = Counter(list(itertools.chain(*[parse_ngrams(sen, args.n) for sen in sentences])))
     n_min_1_grams = Counter(list(itertools.chain(*[parse_ngrams(sen, args.n - 1) for sen in sentences])))
 
@@ -138,16 +157,19 @@ if __name__ == "__main__":
         print_ngrams(sort_ngrams(n_grams), args.m)
         print('\n(n-1)-grams')
         print_ngrams(sort_ngrams(n_min_1_grams), args.m)
+        exit()
 
     # if cond file is given calculate probabilities
     if args.cond_file:
         probs = calc_probabilities_cond_file(args.cond_file, args.n, n_grams, n_min_1_grams)
         print(probs)
+        exit()
         
     # calculate probabilities of sequence file
     if args.seq_file:
-        probs = calc_probabilities_seq_file(args.seq_file)
+        probs = calc_probabilities_seq_file(args.seq_file, args.n, n_grams, n_min_1_grams)
         print(probs)
+        exit()
         
     # calculate probabilities of permutations         
     if args.scored_perms:
@@ -156,6 +178,4 @@ if __name__ == "__main__":
         
         perms_a = set_permutations(set_a)
         perms_b = set_permutations(set_b)
-    
-
-    
+        exit()

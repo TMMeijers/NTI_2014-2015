@@ -11,6 +11,13 @@ We can
 paved with
 START The
 START Emma
+START Emma got
+START START Emma
+START START START Emma
+START START I
+START START Mr
+unnecessary STOP STOP
+her STOP STOP
 Her astonishment
 he had
 room STOP
@@ -27,3 +34,4 @@ he had mentioned
 the groundwork of disapprobation
 START Be not alarmed
 I will only say
+START START START Be

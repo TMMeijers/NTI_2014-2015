@@ -9,7 +9,8 @@ from __future__ import print_function
 from argparse import ArgumentParser
 
 #%%
-def add_start_stop(in_file):
+def add_start_stop(in_file, n = 1):
+
     line_count = 0 # current line
     lines = [] # lines
     
@@ -18,6 +19,12 @@ def add_start_stop(in_file):
     
     sym_start = 'START ';
     sym_stop = ' STOP';
+
+    # n is for multiplying the START, STOP symbols. When n = 2 we want
+    # START at the beginning for each sentence. Hence sym_start * (n-1)
+    # If n = 1, we want the same
+    n -= 1
+    if not n: n = 1
     
     # idea is to read in the whole file into an array and to record where 
     # we encounter START and STOPS. 
@@ -29,7 +36,7 @@ def add_start_stop(in_file):
             
             if l == '\n':
                 if start_after_stop:
-                    stop_line = lines[line_count - 1].replace('\n', '') + sym_stop + '\n'
+                    stop_line = lines[line_count - 1].replace('\n', '') + (sym_stop * n) + '\n'
                     lines[line_count - 1] = stop_line
                     start_after_stop = False
                 last_line_newline = False 
@@ -37,11 +44,11 @@ def add_start_stop(in_file):
                 last_line_newline = True
 
             elif line_count == 0: # first line in text and there is text
-                lines[0] = sym_start + lines[0]
+                lines[0] = (sym_start * n) + lines[0]
                 last_line_newline = False
                 start_after_stop = True
             elif last_line_newline: # line before current line was '\n'
-                lines[line_count] = sym_start + lines[line_count]
+                lines[line_count] = (sym_start * n) + lines[line_count]
                 last_line_newline = False
                 start_after_stop = True
                 
@@ -59,7 +66,7 @@ if __name__ == "__main__":
     
     args = parser.parse_args()
     
-    start_stop_lines = add_start_stop(args.input_file)
+    start_stop_lines = add_start_stop(args.input_file, 1)
     with open(args.output_file, 'w') as f_out:
         for l in start_stop_lines:
             f_out.write(l)
