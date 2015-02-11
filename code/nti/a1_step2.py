@@ -20,7 +20,7 @@ def set_permutations(s):
     
     resulting array will be of length |s|!
     """
-    return [p for p in itertools.permutations(s)]
+    return [list(p) for p in itertools.permutations(s)]
 
 #%%
 def product(lst):
@@ -40,7 +40,7 @@ def seq_prob(w_all, n, n_grams, n_min_1_grams):
         w_all.append('STOP')
 
     parsed_n_grams = parse_ngrams(w_all, n)
-    print(parsed_n_grams)
+    #print(parsed_n_grams)
 
     if n is 1:
         return product([rel_prob(ng.split(), n_grams) for ng in parsed_n_grams])
@@ -136,9 +136,13 @@ if __name__ == "__main__":
     parser.add_argument('-scored-permutations', action='store_true', dest='scored_perms', help='check permutations')
     args = parser.parse_args()
     
+    # INPUT CHECKS 
     if not args.input_file or not args.n or args.n < 1:
         parser.print_help()
         exit('Missing required arguments')
+        
+    if args.scored_perms and args.n is not 2:
+            exit('n must be 2 when using permutations')
     
     # split and flatten array
     # sentences is list of sentences that start with START and end with STOP
@@ -181,4 +185,11 @@ if __name__ == "__main__":
         
         perms_a = set_permutations(set_a)
         perms_b = set_permutations(set_b)
+        
+        p_perms_a = Counter({' '.join(seq) : seq_prob(seq, args.n, n_grams, n_min_1_grams) for seq in perms_a})
+        p_perms_b = Counter({' '.join(seq) : seq_prob(seq, args.n, n_grams, n_min_1_grams) for seq in perms_b})
+        
+        print(p_perms_a.most_common(2))
+        print(p_perms_b.most_common(2))
+        
         exit()
