@@ -14,6 +14,20 @@ from sys import exit
 import itertools
 
 #%%
+def set_permutations(s):
+    """
+    generates all permutations from set s
+    
+    resulting array will be of length |s|!
+    """
+    return [p for p in itertools.permutations(s)]
+
+#%%
+def seq_prob(w_all):
+    print(w_all)
+    return 0
+
+#%%
 def rel_prob(w_all, n_grams):
     """ 
     calculates relative probability of sentence w_all given histogram n_grams
@@ -88,14 +102,19 @@ def get_sentences(ss):
     return sentences
             
 #%%
+def calc_probabilities_seq_file(seq_file):
+    with open(seq_file) as f:
+        return {seq.strip() : seq_prob(seq.split()) for seq in f}
+            
+#%%
 if __name__ == "__main__":
-    # here code for program
-    
     parser = ArgumentParser(description='Assignment A, Step 1')
     parser.add_argument('-corpus', dest ='input_file', type=str, help='Path to corpus file')
-    parser.add_argument('-n', dest='n', type=int, help='Length of word-sequences to process (n-grams) [1,inf]')
+    parser.add_argument('-n', dest='n', default=2, type=int, help='Length of word-sequences to process (n-grams) [1,inf]')
     parser.add_argument('-m', dest='m', type=int, default=None, help='Number of n-grams to show in output')
     parser.add_argument('-conditional-prob-file', dest='cond_file', type=str, help='file for conditional probabilities')
+    parser.add_argument('-sequence-prob-file', dest='seq_file', type=str, help='file for sequence probabilities')
+    parser.add_argument('-scored-permutations', action='store_true', dest='scored_perms', help='check permutations')
     args = parser.parse_args()
     
     if not args.input_file or not args.n or args.n < 1:
@@ -119,10 +138,24 @@ if __name__ == "__main__":
         print_ngrams(sort_ngrams(n_grams), args.m)
         print('\n(n-1)-grams')
         print_ngrams(sort_ngrams(n_min_1_grams), args.m)
-        
+
     # if cond file is given calculate probabilities
     if args.cond_file:
         probs = calc_probabilities_cond_file(args.cond_file, args.n, n_grams, n_min_1_grams)
         print(probs)
+        
+    # calculate probabilities of sequence file
+    if args.seq_file:
+        probs = calc_probabilities_seq_file(args.seq_file)
+        print(probs)
+        
+    # calculate probabilities of permutations         
+    if args.scored_perms:
+        set_a = ['know', 'I', 'opinion', 'do', 'be', 'your', 'not', 'may', 'what']
+        set_b = ['I', 'do', 'not', 'know']
+        
+        perms_a = set_permutations(set_a)
+        perms_b = set_permutations(set_b)
     
+
     
