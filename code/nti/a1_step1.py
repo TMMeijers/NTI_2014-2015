@@ -43,7 +43,7 @@ def parse_ngrams(splitted_line, n):
         
     if n > 1:
         splitted_line = make_grams(splitted_line, n)
-    return Counter(splitted_line)
+    return splitted_line
     
 def print_ngrams(n_grams, m = None):
     """
@@ -67,7 +67,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     
     lines = read_words(args.input_file)
-    n_grams_frequency = parse_ngrams(lines, args.n)
+    n_grams_frequency = Counter(parse_ngrams(lines, args.n))
     
     freq_sum = sum(n_grams_frequency.values())
     print 'sum: {}'.format(freq_sum)

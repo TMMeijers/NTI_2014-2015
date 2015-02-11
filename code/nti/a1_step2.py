@@ -105,14 +105,8 @@ if __name__ == "__main__":
     # split and flatten array
     # sentences is list of sentences that start with START and end with STOP
     sentences = get_sentences(add_start_stop(args.input_file))
-
-    # this is fastest way that I have found to merge Counters
-    # note that this step is necessary to avoid the n-gram with STOP START. 
-    # We want to consider each sentence solely
-    n_grams = reduce(lambda a,b: a.update(b) or a, 
-                     [parse_ngrams(sen, args.n) for sen in sentences])
-    n_min_1_grams = reduce(lambda a,b: a.update(b) or a,
-                           [parse_ngrams(sen, args.n - 1) for sen in sentences])
+    n_grams = Counter(list(itertools.chain(*[parse_ngrams(sen, args.n) for sen in sentences])))
+    n_min_1_grams = Counter(list(itertools.chain(*[parse_ngrams(sen, args.n - 1) for sen in sentences])))
 
     # when n=1 n_min_1_grams would become a dict instead of a Counter. To keep
     # stuff consistent...
