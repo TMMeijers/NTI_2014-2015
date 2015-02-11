@@ -4,4 +4,4 @@
 PY=python
 
 # pass all arguments to script to python script
-python a1_step1.py $@
+python a1_step2.py $@

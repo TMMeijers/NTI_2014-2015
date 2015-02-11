@@ -143,6 +143,10 @@ if __name__ == "__main__":
         
     if args.scored_perms and args.n is not 2:
             exit('n must be 2 when using permutations')
+            
+    if not args.cond_file and not args.m and not args.seq_file and not args.scored_perms:
+        parser.print_help()
+        exit('What shall I do?')
     
     # split and flatten array
     # sentences is list of sentences that start with START and end with STOP
