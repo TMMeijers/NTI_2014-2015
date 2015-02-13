@@ -93,11 +93,8 @@ def calc_probabilities_cond_file(cond_file, n, n_grams, n_min_1_grams):
                 continue
             p = -1
             # conditional prob is only possible when n > 1. P(x|a)
-            # so when n == 0 -> calculate relative probabilty
-            if n > 1:
-                p = cond_prob(words, words[0:-1], n_grams, n_min_1_grams)
-            else:
-                p = rel_prob(words, n_grams)
+            # so this will return 0.0
+            p = cond_prob(words, words[0:-1], n_grams, n_min_1_grams)
             probs[seq.strip()] = p
             
         return probs
