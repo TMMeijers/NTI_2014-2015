@@ -127,7 +127,7 @@ def calc_probabilities_seq_file(seq_file, n, n_grams, n_min_1_grams):
             
 #%%
 if __name__ == "__main__":
-    parser = ArgumentParser(description='Assignment A, Step 1')
+    parser = ArgumentParser(description='Assignment A, Step 2')
     parser.add_argument('-corpus', dest ='input_file', type=str, help='Path to corpus file')
     parser.add_argument('-n', dest='n', default=2, type=int, help='Length of word-sequences to process (n-grams) [1,inf]')
     parser.add_argument('-m', dest='m', type=int, default=None, help='Number of n-grams to show in output')
