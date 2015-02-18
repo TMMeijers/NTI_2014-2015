@@ -41,4 +41,4 @@ if __name__ == "__main__":
     sentences = get_sentences(add_start_stop(args.input_file, args.n if not args.m else 1))
     
     n_grams = Counter(list(itertools.chain(*[parse_ngrams(sen, args.n) for sen in sentences])))
-    n_min_1_grams = Counter(list(itertools.chain(*[parse_ngrams(sen, args.n - 1) for sen in sentences])))
+    n_min_1_grams = Counter(list(itertools.chain(*[parse_ngrams(sen, args.n - 1) for sen in sentences]))) 
