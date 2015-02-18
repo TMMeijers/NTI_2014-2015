@@ -2,7 +2,7 @@
 """
 Created on Tue Feb 10 11:36:38 2015
 
-@author: markus
+@author: Markus Pfundstein, Thomas Meijers, Cornelis Boon
 """
 
 from __future__ import print_function
