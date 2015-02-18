@@ -182,7 +182,7 @@ if __name__ == "__main__":
     # calculate probabilities of permutations         
     if args.scored_perms:
         set_a = ['know', 'I', 'opinion', 'do', 'be', 'your', 'not', 'may', 'what']
-        set_b = ['I', 'do', 'not', 'know']
+        set_b = ['I', 'do', 'not', 'know'] 
         
         perms_a = set_permutations(set_a)
         perms_b = set_permutations(set_b)
