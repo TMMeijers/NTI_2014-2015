@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# if you use different python program than change this
+PY=python
+
+# pass all arguments to script to python script
+python a1_step3.py $@
