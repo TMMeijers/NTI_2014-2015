@@ -12,17 +12,23 @@ from a1_step2 import get_sentences, calc_probabilities_seq_file
 from argparse import ArgumentParser
 from collections import Counter
 from sys import exit
-import itertools
+from itertools import product, chain
 
 
-def make_unseen(n_grams, n_min_1):
+def make_unseen(n_grams, n_min_1, n):
     """
     Adds unseen events to the bi-gram model
     """
-    new_grams = [' '.join(i) for i in itertools.product(n_min_1, repeat=2)]
-    for(new_gram in new_grams and new_gram not in n_grams):
-        n_grams[new_gram] = 0
-    return n_grams
+    print(len(n_grams))        
+    new_grams = (' '.join(i) for i in product(n_min_1.iterkeys(), repeat=n))
+    
+    n_grams = dict(n_grams)
+    unseen = ((new_gram, 0) for new_gram in new_grams if new_gram not in n_grams)
+    print('Gen2')
+    n_grams.update(unseen)
+    print(len(n_grams))    
+    exit()    
+    #return n_grams
 #%%
 def add_1_smoothing():
     """
@@ -34,6 +40,7 @@ def good_turing_smoothing():
     """
     Applies good-turing smoothing to the bi-gram model
     """
+    
 def smoothe_min_1():
     """
     Smoothes the unigram model to suit the new bi-gram model
@@ -56,18 +63,19 @@ if __name__ == "__main__":
         
     # split and flatten array
     # sentences is list of sentences that start with START and end with STOP
-    sentences = get_sentences(add_start_stop(args.input_file, args.n if not args.m else 1))
+    sentences = get_sentences(add_start_stop(args.train_file, args.n if not args.m else 1))
     
     
-    n_grams = Counter(list(itertools.chain(*[parse_ngrams(sen, args.n) for sen in sentences])))
-    n_min_1_grams = Counter(list(itertools.chain(*[parse_ngrams(sen, args.n - 1) for sen in sentences])))    
-    n_grams = make_unseen(n_grams, n_min_1_grams)
-    if(args.smoothing == 'gt'):
-        n_grams = good_turing_smoothing(n_grams)
-        n_min_1_grams =
-    if(args.smoothing == 'add1'):
-        n_grams = add_1_smoothing
-    if(args.smoothing is not None):
-        n_min_1_grams = smoothe_min_1(n_min_1_grams)
-        
-    calc_probabilities_seq_file(args.test_file, args.n, n_grams, n_min_1_grams)
+    n_grams = Counter(list(chain(*[parse_ngrams(sen, args.n) for sen in sentences])))
+    n_min_1_grams = Counter(list(chain(*[parse_ngrams(sen, args.n - 1) for sen in sentences])))    
+    
+    n_grams = make_unseen(n_grams, n_min_1_grams, args.n)
+    #if(args.smoothing == 'gt'):
+    #    n_grams = good_turing_smoothing(n_grams)
+    #    n_min_1_grams =
+    #if(args.smoothing == 'add1'):
+    #    n_grams = add_1_smoothing
+    #if(args.smoothing is not None):
+    #    n_min_1_grams = smoothe_min_1(n_min_1_grams)
+    #    
+    #calc_probabilities_seq_file(args.test_file, args.n, n_grams, n_min_1_grams)
