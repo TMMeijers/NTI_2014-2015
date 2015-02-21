@@ -55,7 +55,7 @@ def print_ngrams(n_grams, m = None):
         if idx is m:
             break
         idx += 1
-        print '{} {}'.format(word, freq)
+        print '{} {}\n'.format(word, freq)
     
 if __name__ == "__main__":
     # here code for program
