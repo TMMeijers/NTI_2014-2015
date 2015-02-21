@@ -14,8 +14,8 @@ from collections import Counter, OrderedDict
 from sys import exit
 from itertools import product, chain
 
-def sort_ngrams_bidirectional(ngrams, most):
-    return OrderedDict(sorted(ngrams.items(), key=lambda x: x[1], reverse=most))
+def sort_ngrams_bidirectional(ngrams, order):
+    return OrderedDict(sorted(ngrams.items(), key=lambda x: x[1], reverse=order))
 
 def make_unseen(n_grams, n_min_1, n):
     """
