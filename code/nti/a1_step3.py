@@ -17,20 +17,6 @@ from itertools import product, chain
 def sort_ngrams_bidirectional(ngrams, order):
     return OrderedDict(sorted(ngrams.items(), key=lambda x: x[1], reverse=order))
 
-def make_unseen(n_grams, n_min_1, n):
-    """
-    Adds unseen events to the bi-gram model
-    """
-    print(len(n_grams))        
-    new_grams = (' '.join(i) for i in product(n_min_1.iterkeys(), repeat=n))
-    
-    n_grams = dict(n_grams)
-    unseen = ((new_gram, 0) for new_gram in new_grams if new_gram not in n_grams)
-    print('Gen2')
-    n_grams.update(unseen)
-    print(len(n_grams))    
-    exit()    
-    #return n_grams
 #%%
 def add_labda_smoothing(test_sentences, n_grams, n_min_1_grams, n):
     """
@@ -39,7 +25,7 @@ def add_labda_smoothing(test_sentences, n_grams, n_min_1_grams, n):
     # As in assignment: assume V = unique words in train corpus, e.g. length of
     # n_min_1_grams for n = 2
     V = len(n_min_1_grams)
-    return {' '.join(w_all) : add_labda_prob(w_all, n_grams, n_min_1_grams, n, V) for w_all in test_sentences}
+    return {' '.join(w_all): add_labda_prob(w_all, n_grams, n_min_1_grams, n, V) for w_all in test_sentences}
         
 def add_labda_prob(w_all, n_grams, n_min_1_grams, n, V):
     """
@@ -48,20 +34,62 @@ def add_labda_prob(w_all, n_grams, n_min_1_grams, n, V):
     parsed_n_grams = parse_ngrams(w_all, n)
     prob = 0
     for ng in parsed_n_grams:
-        prob += float(n_grams[ng] + 1) / (V + n_min_1_grams[ng[0]])
+        if ng not in n_grams:
+            prob += (1/V)
+        else:
+            prob += float(n_grams[ng] + 1) / (V + n_min_1_grams[' '.join(ng.split()[0:n])])
     return prob
     
 #%%
-def good_turing_smoothing():
+def good_turing_smoothing(test_sens, n_grams, n_min_1, n):
     """
     Applies good-turing smoothing to the bi-gram model
     """
+    # Total unseen events    
+    Nzero = len(n_min_1_grams)**2 - len(n_grams)
+    #Upper bound for smoothing    
+    k = 5    
+    return {' '.join(w_all) : good_turing_prob(w_all, n_grams, n_min_1, n, k, Nzero) for w_all in test_sens}
     
-def smoothe_min_1():
+def good_turing_prob(w_all, ngrams, nmin1, n, k, Nzero):
     """
-    Smoothes the unigram model to suit the new bi-gram model
+    Applies gt-smoothing and returns the probability
     """
+    parsed_n_grams = parse_ngrams(w_all, n)
+    prob = 0
+    N = {i : len([ngram for ngram in n_grams.values() if ngram is i]) for i in xrange(k+2) if i is not 0}
+    N[0] = Nzero
+    
+    #Smoothe the bi-gram model    
+    for ng in parsed_n_grams:
+        if  n_grams[ng] < 6 and n_grams[ng] > 0:
+            
+            n_grams[ng] = gt_smooth(ng, n_grams, N, k)
+        else:
+            continue
+        
+    #Smoothe the unigram model. Does not work yet correctly
+    nmin1 = smoothe_min_1(nmin1, n_grams, n)
+    
+    #Calculate the probabilities    
+    for ng in parsed_n_grams:
+        if ng not in n_grams:
+            prob += N[1]/(N[0]*len(n_grams))
+        else:
+            prob += n_grams[ng]/nmin1[ng.split()[0]]
+    return prob
+    
+def gt_smooth(ng, n_grams, N, k):
+    c = n_grams[ng]    
+    return float( ((c +1)* (N[c+1]/N[c]) - c*(((k+1)*N[k+1])/N[1]) )/(1 - (((k+1)*N[k+1])/N[1] )))
 
+def smoothe_min_1(nmin1, ngrams, n):
+    """
+    Smoothes the unigram model to suit the new bi-gram model, does not work yet
+    """
+    for ng in nmin1:
+        nmin1[ng] = sum([n_grams[n_gram] for n_gram in n_grams if n_gram.split()[0]) is ng])
+    return nmin1
 #%%
 if __name__ == "__main__":
     parser = ArgumentParser(description='Assignment A, Step 2')
@@ -69,7 +97,7 @@ if __name__ == "__main__":
     parser.add_argument('-test-corpus', dest ='test_file', type=str, help='Path to test corpus file')
     parser.add_argument('-n', dest='n', default=2, type=int, help='Length of word-sequences to process (n-grams) [1,inf]')
     parser.add_argument('-m', dest='m', type=int, default=None, help='Number of sequences to show in output')
-    parser.add_argument('-smoothing', dest='smoothing', type=str, default='no', help='Method of smoothing [add1|gt|no]')
+    parser.add_argument('-smoothing', dest='smoothing', type=str, default=None, help='Method of smoothing [add1|gt|no]')
     args = parser.parse_args()
     
     # INPUT CHECKS 
@@ -86,24 +114,15 @@ if __name__ == "__main__":
     n_grams = Counter(list(chain(*[parse_ngrams(sen, args.n) for sen in sentences])))
     n_min_1_grams = Counter(list(chain(*[parse_ngrams(sen, args.n - 1) for sen in sentences])))   
         
-    if args.smoothing == 'add1':
-        probs = add_labda_smoothing(test_sentences, n_grams, n_min_1_grams, args.n)
+    if args.smoothing:
+        if args.smoothing == 'add1':
+           probs = add_labda_smoothing(test_sentences, n_grams, n_min_1_grams, args.n)
+        elif args.smoothing == 'gt':
+            good_turing_smoothing(test_sentences, n_grams, n_min_1_grams, args.n)        
         print('{} most likely sentences:'.format(args.m))
         print_ngrams(sort_ngrams_bidirectional(probs, True), args.m)
         print('{} least likely sentences:'.format(args.m))
         print_ngrams(sort_ngrams_bidirectional(probs, False), args.m)
-    elif args.smoothing == 'gt':
-        good_turing_smoothing()
+        
     else:
         True
-    # Doesn't work like this
-    #n_grams = make_unseen(n_grams, n_min_1_grams, args.n)
-    #if(args.smoothing == 'gt'):
-    #    n_grams = good_turing_smoothing(n_grams)
-    #    n_min_1_grams =
-    #if(args.smoothing == 'add1'):
-    #    n_grams = add_1_smoothing
-    #if(args.smoothing is not None):
-    #    n_min_1_grams = smoothe_min_1(n_min_1_grams)
-    #    
-    #calc_probabilities_seq_file(args.test_file, args.n, n_grams, n_min_1_grams)
