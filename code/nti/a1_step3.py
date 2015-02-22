@@ -81,7 +81,7 @@ def seq_prob_gt(w_all, n, n_grams,N, unigrams):
     unseen = len([ng for ng in parsed_n_grams if ng not in n_grams])
     
     if unseen:    
-        prob = float(unseen*N[1])/(N[0]*len(n_grams))
+        prob = (float(N[1])/(N[0]*len(n_grams)))**unseen
     if unseen == len(parsed_n_grams):
         return prob
     return prob*product([cond_prob_gt(ng.split(), ''.join(ng.split()[0:-1]), n_grams) for ng in parsed_n_grams if ng in n_grams]) 
