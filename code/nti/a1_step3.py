@@ -66,26 +66,31 @@ def add_labda_prob(w_all, n_grams, n_min_1_grams, n, V):
         prob *= float(n_grams[ng] + 1) / (V + n_min_1_grams[ng[0]])
     return prob
 
-    
 #%%
-def seq_prob_gt(w_all, n, n_grams, unigrams):
+def gt_smoothing(test_sens, n, n_grams, unigrams):
     """
     Applies good-turing smoothing to the bi-gram model
     """
-    # Total unseen events    
+        # Total unseen events    
     Nzero = unigrams**2 - len(n_grams)
     #Upper bound for smoothing    
     k = 5    
     # Frequency of frequencies for frequencies of 0 to 6
     N = {i : len([ngram for ngram in n_grams.values() if ngram is i]) for i in xrange(k+2) if i is not 0}
     N[0] = Nzero
-    
     #Smoothe the bi-gram model 
     for ng in n_grams:
         if  n_grams[ng] < 6 and n_grams[ng] > 0:
-            n_grams[ng] = gt_smooth(n_grams[ng], N, k)    
-    
-    parsed_n_grams = parse_ngrams(w_all, n)        
+            n_grams[ng] = gt_smooth(n_grams[ng], N, k)  
+    return {' '.join(seq) : seq_prob_gt(seq, n, n_grams, N, unigrams) for seq in test_sens}
+   
+#%%
+def seq_prob_gt(w_all, n, n_grams,N, unigrams):
+    """
+    Computes the sequential probability after good-turing has been performed
+    """
+    parsed_n_grams = parse_ngrams(w_all, n)
+    prob = 1    
     for ng in parsed_n_grams:
         if ng not in n_grams:
             prob *= N[1]/(N[0]*len(n_grams))
@@ -94,6 +99,9 @@ def seq_prob_gt(w_all, n, n_grams, unigrams):
 
 #%%
 def cond_prob_gt(w_all, w_rest, n_grams):
+    """
+    Computes the conditional probability of a bigram after being smoothed
+    """
     p_all = n_grams[''.join(w_all)]
     
     p_rest = sum([n_grams[ng] for ng in n_grams if w_rest in ng])
@@ -130,7 +138,8 @@ def calc_probabilities_seq_file(test_sens, n, n_grams, n_min_1_grams, unigrams, 
     if smoothing == 'add1':
         return {' '.join(seq) : seq_prob_add1(seq, n, n_grams, n_min_1_grams, unigrams) for seq in test_sens}
     if smoothing == 'gt':
-        return {' '.join(seq) : seq_prob_gt(seq, n, n_grams, unigrams) for seq in test_sens}
+        return gt_smoothing(test_sens, n, n_grams, unigrams)
+        
 
 
 #%%
