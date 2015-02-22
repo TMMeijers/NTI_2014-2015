@@ -14,21 +14,9 @@ from collections import Counter, OrderedDict
 from sys import exit
 from itertools import chain
 
+#%%
 def sort_ngrams_bidirectional(ngrams, order):
     return OrderedDict(sorted(ngrams.items(), key=lambda x: x[1], reverse=order))
-
-#%%
-def cond_prob_add1(w_all, w_rest, n_grams, n_min_1_grams):
-    """
-    calculates conditional probability of w_all|w_rest given histogram n_grams
-    and n_min_1_grams with add 1 smoothing
-    
-    P(w_n|w_1,w)2,...,w_{n-1}) = P(w_1, ..., w_n) + 1 / P(w_1, ..., w_{n-1}) + V
-    """
-    p_all = n_grams[' '.join(w_all)]
-    p_rest = n_min_1_grams[' '.join(w_rest)]
-        
-    return (float(p_all) + 1) / (p_rest + len(n_min_1_grams))
 
 #%%
 def seq_prob_add1(w_all, n, n_grams, n_min_1_grams, unigrams):
@@ -55,7 +43,9 @@ def cond_prob_add1(w_all, w_rest, n_grams, n_min_1_grams, V):
 
 
 
-#%% Old add_labda function
+
+
+#%% Old add_labda function 1
 def add_labda_smoothing(test_sentences, n_grams, n_min_1_grams, n):
     """
     Applies add-1 smoothing to the bi-gram model
@@ -65,25 +55,25 @@ def add_labda_smoothing(test_sentences, n_grams, n_min_1_grams, n):
     V = len(n_min_1_grams)
     return {' '.join(w_all) : add_labda_prob(w_all, n_grams, n_min_1_grams, n, V) for w_all in test_sentences}
 
-#%% 
+#%% Old add_labe function 2
 def add_labda_prob(w_all, n_grams, n_min_1_grams, n, V):
     """
     Calculates the probability after add labda smoothing
     """
     parsed_n_grams = parse_ngrams(w_all, n)
-    prob = 0
+    prob = 1
     for ng in parsed_n_grams:
         prob *= float(n_grams[ng] + 1) / (V + n_min_1_grams[ng[0]])
     return prob
 
     
 #%%
-def good_turing_smoothing(test_sens, n_grams, n_min_1, n):
+def seq_prob_gt(w_all, n, n_grams, unigrams):
     """
     Applies good-turing smoothing to the bi-gram model
     """
     # Total unseen events    
-    Nzero = len(n_min_1_grams)**2 - len(n_grams)
+    Nzero = unigrams**2 - len(n_grams)
     #Upper bound for smoothing    
     k = 5    
     # Frequency of frequencies for frequencies of 0 to 6
@@ -95,14 +85,28 @@ def good_turing_smoothing(test_sens, n_grams, n_min_1, n):
         if  n_grams[ng] < 6 and n_grams[ng] > 0:
             n_grams[ng] = gt_smooth(n_grams[ng], N, k)    
     
-    return {' '.join(w_all) : good_turing_prob(w_all, n_grams, n_min_1, n, k, N) for w_all in test_sens}
+    parsed_n_grams = parse_ngrams(w_all, n)        
+    for ng in parsed_n_grams:
+        if ng not in n_grams:
+            prob *= N[1]/(N[0]*len(n_grams))
+            
+    return prob*product([cond_prob_gt(ng.split(), ''.join(ng.split()[0:-1]), n_grams) for ng in parsed_n_grams if ng in n_grams]) 
 
+#%%
+def cond_prob_gt(w_all, w_rest, n_grams):
+    p_all = n_grams[''.join(w_all)]
+    
+    p_rest = sum([n_grams[ng] for ng in n_grams if w_rest in ng])
+    if not p_rest:
+        return 0.0
+    return (float(p_all)/p_rest)
+    
 #%%    
-def good_turing_prob(w_all, ngrams, nmin1, n, k, N):
+def good_turing_prob(w_all, ngrams, nmin1, n, N):
     """
     Returns the probability of sentences once the bi-grams have been smoothed
     """
-    parsed_n_grams = parse_ngrams(w_all, n)
+
     prob = 0
 
     #Calculate the probabilities    
@@ -126,7 +130,7 @@ def calc_probabilities_seq_file(test_sens, n, n_grams, n_min_1_grams, unigrams, 
     if smoothing == 'add1':
         return {' '.join(seq) : seq_prob_add1(seq, n, n_grams, n_min_1_grams, unigrams) for seq in test_sens}
     if smoothing == 'gt':
-        return {' '.join(seq) : seq_prob_gt(seq, n, n_grams, n_min_1_grams, unigrams) for seq in test_sens}
+        return {' '.join(seq) : seq_prob_gt(seq, n, n_grams, unigrams) for seq in test_sens}
 
 
 #%%
