@@ -159,24 +159,3 @@ def good_turing_prob(w_all, ngrams, nmin1, n, N):
                 normalizer = 1
             prob += n_grams[ng]/normalizer
     return prob
-
-#%% Old add_labda function 1
-def add_labda_smoothing(test_sentences, n_grams, n_min_1_grams, n):
-    """
-    Applies add-1 smoothing to the bi-gram model
-    """
-# As in assignment: assume V = unique words in train corpus, e.g. length of
-# n_min_1_grams for n = 2
-    V = len(n_min_1_grams)
-    return {' '.join(w_all) : add_labda_prob(w_all, n_grams, n_min_1_grams, n, V) for w_all in test_sentences}
-
-#%% Old add_labe function 2
-def add_labda_prob(w_all, n_grams, n_min_1_grams, n, V):
-    """
-    Calculates the probability after add labda smoothing
-    """
-    parsed_n_grams = parse_ngrams(w_all, n)
-    prob = 1
-    for ng in parsed_n_grams:
-        prob *= float(n_grams[ng] + 1) / (V + n_min_1_grams[ng[0]])
-    return prob
