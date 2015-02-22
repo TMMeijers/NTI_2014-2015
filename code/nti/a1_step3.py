@@ -18,6 +18,19 @@ def sort_ngrams_bidirectional(ngrams, order):
     return OrderedDict(sorted(ngrams.items(), key=lambda x: x[1], reverse=order))
 
 #%%
+def cond_prob_add1(w_all, w_rest, n_grams, n_min_1_grams):
+    """
+    calculates conditional probability of w_all|w_rest given histogram n_grams
+    and n_min_1_grams with add 1 smoothing
+    
+    P(w_n|w_1,w)2,...,w_{n-1}) = P(w_1, ..., w_n) + 1 / P(w_1, ..., w_{n-1}) + V
+    """
+    p_all = n_grams[' '.join(w_all)]
+    p_rest = n_min_1_grams[' '.join(w_rest)]
+        
+    return (float(p_all) + 1) / (p_rest + len(n_min_1_grams))
+
+#%%
 def seq_prob_add1(w_all, n, n_grams, n_min_1_grams, unigrams):
     """
     Applies add-1 smoothing to the bi-gram model
