@@ -24,11 +24,7 @@ def seq_prob_add1(w_all, n, n_grams, n_min_1_grams, unigrams):
     """
     # As in assignment: assume V = unique words in train corpus, e.g. length of
     # n_min_1_grams for n = 2
-    m = n -1 # if n > 1 else n    
-    # add START and STOPS
-    for i in xrange(0, m):
-        w_all.insert(0, 'START')
-        w_all.append('STOP')
+    
     parsed_n_grams = parse_ngrams(w_all, n)
     if n is 1:
         return product([rel_prob(ng.split(), n_grams) for ng in parsed_n_grams])
@@ -48,9 +44,9 @@ def cond_prob_add1(w_all, w_rest, n_grams, n_min_1_grams, V):
 
 #%% Old add_labda function
 def add_labda_smoothing(test_sentences, n_grams, n_min_1_grams, n):
-"""
-Applies add-1 smoothing to the bi-gram model
-"""
+    """
+    Applies add-1 smoothing to the bi-gram model
+    """
 # As in assignment: assume V = unique words in train corpus, e.g. length of
 # n_min_1_grams for n = 2
     V = len(n_min_1_grams)
@@ -58,9 +54,9 @@ Applies add-1 smoothing to the bi-gram model
 
 #%% 
 def add_labda_prob(w_all, n_grams, n_min_1_grams, n, V):
-"""
-Calculates the probability after add labda smoothing
-"""
+    """
+    Calculates the probability after add labda smoothing
+    """
     parsed_n_grams = parse_ngrams(w_all, n)
     prob = 0
     for ng in parsed_n_grams:
@@ -111,14 +107,13 @@ def gt_smooth(c, N, k):
     return float( ((c +1)* (N[c+1]/N[c]) - c*(((k+1)*N[k+1])/N[1]) )/(1 - (((k+1)*N[k+1])/N[1] )))
 
 #%%
-def calc_probabilities_seq_file(seq_file, n, n_grams, n_min_1_grams, unigrams, smoothing=None):
-    with open(seq_file) as f:
-        if smoothing is None:
-            return {seq.strip() : seq_prob(seq.split(), n, n_grams, n_min_1_grams) for seq in f}
-        if smoothing == 'add1':
-            return {seq.strip() : seq_prob_add1(seq.split(), n, n_grams, n_min_1_grams, unigrams) for seq in f}
-        if smoothing == 'gt':
-            return {seq.strip() : seq_prob_gt(seq.split(), n, n_grams, n_min_1_grams, unigrams) for seq in f}
+def calc_probabilities_seq_file(test_sens, n, n_grams, n_min_1_grams, unigrams, smoothing=None):
+    if smoothing is None:
+        return {' '.join(seq) : seq_prob(seq, n, n_grams, n_min_1_grams) for seq in test_sens}
+    if smoothing == 'add1':
+        return {' '.join(seq) : seq_prob_add1(seq, n, n_grams, n_min_1_grams, unigrams) for seq in test_sens}
+    if smoothing == 'gt':
+        return {' '.join(seq) : seq_prob_gt(seq, n, n_grams, n_min_1_grams, unigrams) for seq in test_sens}
 
 
 #%%
@@ -139,18 +134,17 @@ if __name__ == "__main__":
     # split and flatten array
     # sentences is list of sentences that start with START and end with STOP
     sentences = get_sentences(add_start_stop(args.train_file, args.n if not args.m else 1))
-    
+    test_sentences = get_sentences(add_start_stop(args.test_file, args.n if not args.m else 1))
     
     n_grams = Counter(list(chain(*[parse_ngrams(sen, args.n) for sen in sentences])))
     n_min_1_grams = Counter(list(chain(*[parse_ngrams(sen, args.n - 1) for sen in sentences])))   
-    
     
     if args.n > 2:        
         unigrams = len(Counter(list(chain(*[parse_ngrams(sen, 1) for sen in sentences]))))
     else:
         unigrams = len(n_min_1_grams)
     
-    probs = calc_probabilities_seq_file(args.test_file, args.n, n_grams, n_min_1_grams, unigrams, args.smoothing)        
+    probs = calc_probabilities_seq_file(test_sentences, args.n, n_grams, n_min_1_grams, unigrams, args.smoothing)        
     
     percentagenonzero = 100 *len([prob for    prob in probs if probs[prob] != 0])/len(probs)
     print('{} % of {} have a nonzero probability'.format(percentagenonzero, len(probs)))        
