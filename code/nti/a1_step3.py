@@ -34,10 +34,7 @@ def add_labda_prob(w_all, n_grams, n_min_1_grams, n, V):
     parsed_n_grams = parse_ngrams(w_all, n)
     prob = 0
     for ng in parsed_n_grams:
-        if ng not in n_grams:
-            prob += (1/V)
-        else:
-            prob += float(n_grams[ng] + 1) / (V + n_min_1_grams[' '.join(ng.split()[0:n])])
+            prob += float(n_grams[ng] + 1) / (V + n_min_1_grams[' '.join(ng.split()[0])])
     return prob
     
 #%%
@@ -57,6 +54,7 @@ def good_turing_prob(w_all, ngrams, nmin1, n, k, Nzero):
     """
     parsed_n_grams = parse_ngrams(w_all, n)
     prob = 0
+    # Frequency of frequencies for frequencies of 0 to 6
     N = {i : len([ngram for ngram in n_grams.values() if ngram is i]) for i in xrange(k+2) if i is not 0}
     N[0] = Nzero
     
@@ -67,29 +65,22 @@ def good_turing_prob(w_all, ngrams, nmin1, n, k, Nzero):
             n_grams[ng] = gt_smooth(ng, n_grams, N, k)
         else:
             continue
-        
-    #Smoothe the unigram model. Does not work yet correctly
-    nmin1 = smoothe_min_1(nmin1, n_grams, n)
     
     #Calculate the probabilities    
     for ng in parsed_n_grams:
         if ng not in n_grams:
             prob += N[1]/(N[0]*len(n_grams))
         else:
-            prob += n_grams[ng]/nmin1[ng.split()[0]]
+            
+            prob += n_grams[ng]/sum(n_grams[ngram] for ngram in n_grams if ngram.split()[0] == ng.split()[0])
+    print(prob)
     return prob
     
 def gt_smooth(ng, n_grams, N, k):
     c = n_grams[ng]    
     return float( ((c +1)* (N[c+1]/N[c]) - c*(((k+1)*N[k+1])/N[1]) )/(1 - (((k+1)*N[k+1])/N[1] )))
 
-def smoothe_min_1(nmin1, ngrams, n):
-    """
-    Smoothes the unigram model to suit the new bi-gram model, does not work yet
-    """
-    for ng in nmin1:
-        nmin1[ng] = sum([n_grams[n_gram] for n_gram in n_grams if n_gram.split()[0]) is ng])
-    return nmin1
+
 #%%
 if __name__ == "__main__":
     parser = ArgumentParser(description='Assignment A, Step 2')
