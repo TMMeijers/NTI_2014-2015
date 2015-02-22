@@ -8,11 +8,23 @@ Created on Wed Feb 18 11:41:40 2015
 from __future__ import print_function
 from start_stop_adder import add_start_stop
 from a1_step1 import parse_ngrams, print_ngrams
-from a1_step2 import get_sentences, product, rel_prob, product
+from a1_step2 import get_sentences, product, rel_prob, cond_prob
 from argparse import ArgumentParser
 from collections import Counter, OrderedDict
 from sys import exit
 from itertools import chain
+
+#%%
+def seq_prob(w_all, n, n_grams, n_min_1_grams):    
+    parsed_n_grams = parse_ngrams(w_all, n)
+    #print(parsed_n_grams)
+
+    if n is 1:
+        return product([rel_prob(ng.split(), n_grams) for ng in parsed_n_grams])
+    
+    return product([cond_prob(ng.split(), ng.split()[0:-1], n_grams, n_min_1_grams) for ng in parsed_n_grams])
+
+
 
 #%%
 def sort_ngrams_bidirectional(ngrams, order):
@@ -58,20 +70,24 @@ def gt_smoothing(test_sens, n, n_grams, unigrams):
     for ng in n_grams:
         if  n_grams[ng] < 6 and n_grams[ng] > 0:
             n_grams[ng] = gt_smooth(n_grams[ng], N, k)
+    
             
     return {' '.join(seq) : seq_prob_gt(seq, n, n_grams, N, unigrams) for seq in test_sens}
-   
+        
+
 #%%
 def seq_prob_gt(w_all, n, n_grams,N, unigrams):
     """
     Computes the sequential probability after good-turing has been performed
     """
-    parsed_n_grams = parse_ngrams(w_all, n)
-    prob = 1    
-    for ng in parsed_n_grams:
-        if ng not in n_grams:
-            prob *= N[1]/(N[0]*len(n_grams))
-            
+    prob = 1
+    parsed_n_grams = parse_ngrams(w_all, n)    
+    unseen = len([ng for ng in parsed_n_grams if ng not in n_grams])
+    
+    if unseen:    
+        prob = float(unseen*N[1])/(N[0]*len(n_grams))
+    if unseen == len(parsed_n_grams):
+        return prob
     return prob*product([cond_prob_gt(ng.split(), ''.join(ng.split()[0:-1]), n_grams) for ng in parsed_n_grams if ng in n_grams]) 
 
 #%%
@@ -131,7 +147,7 @@ if __name__ == "__main__":
     
     probs = calc_probabilities_seq_file(test_sentences, args.n, n_grams, n_min_1_grams, unigrams, args.smoothing)        
     
-    percentagenonzero = 100 *len([prob for    prob in probs if probs[prob] != 0])/len(probs)
+    percentagenonzero = 100 *float(len([prob for prob in probs if probs[prob] != 0]))/len(probs)
     print('{} % of {} have a nonzero probability'.format(percentagenonzero, len(probs)))        
     print('{} most likely sentences:'.format(args.m))
     print_ngrams(sort_ngrams_bidirectional(probs, True), args.m)
