@@ -46,8 +46,8 @@ def cond_prob_add1(w_all, w_rest, n_grams, n_min_1_grams, V):
     """
     Calculates the probability after add labda smoothing
     """
-    p_all = n_grams[''.join(w_all)]
-    p_rest = n_min_1_grams[''.join(w_rest)]
+    p_all = n_grams[' '.join(w_all)]
+    p_rest = n_min_1_grams[' '.join(w_rest)]
     return (float(p_all)+1) / (p_rest + V)
 
 #%%
@@ -62,17 +62,28 @@ def gt_smoothing(test_sens, n, n_grams, unigrams):
     # Frequency of frequencies for frequencies of 0 to 6
     N = {i : len([ngram for ngram in n_grams.values() if ngram is i]) for i in xrange(k+2) if i is not 0}
     N[0] = Nzero
+    
+    
     #Smoothe the bi-gram model 
     for ng in n_grams:
         if  n_grams[ng] < 6 and n_grams[ng] > 0:
             n_grams[ng] = gt_smooth(n_grams[ng], N, k)
+    #Smoothe unigrams
+    n_min_1_grams = gt_smoothe_min_1(n_grams)
     
-            
-    return {' '.join(seq) : seq_prob_gt(seq, n, n_grams, N, unigrams) for seq in test_sens}
-        
+    return {' '.join(seq) : seq_prob_gt(seq, n, n_grams, n_min_1_grams, N, unigrams) for seq in test_sens}
 
 #%%
-def seq_prob_gt(w_all, n, n_grams,N, unigrams):
+def gt_smoothe_min_1(n_grams):    
+    keys = [' '.join(key.split()[0:-1]) for key in n_grams.iterkeys()]
+    copied = zip(keys, n_grams.itervalues())    
+    n_min_1_grams = {key : 0 for key in keys}
+    for entry in copied:
+        n_min_1_grams[entry[0]] += entry[1]
+    return Counter(n_min_1_grams)
+
+#%%
+def seq_prob_gt(w_all, n, n_grams, n_min_1_grams, N, unigrams):
     """
     Computes the sequential probability after good-turing has been performed
     """
@@ -84,23 +95,26 @@ def seq_prob_gt(w_all, n, n_grams,N, unigrams):
         prob = (float(N[1])/(N[0]*len(n_grams)))**unseen
     if unseen == len(parsed_n_grams):
         return prob
-    return prob*product([cond_prob_gt(ng.split(), ''.join(ng.split()[0:-1]), n_grams) for ng in parsed_n_grams if ng in n_grams]) 
-
+     
+    prob = prob*product([cond_prob_gt(ng.split(), ng.split()[0:-1], n_grams, n_min_1_grams) for ng in parsed_n_grams if ng in n_grams]) 
+    return prob
 #%%
-def cond_prob_gt(w_all, w_rest, n_grams):
+def cond_prob_gt(w_all, w_rest, n_grams, n_min_1_grams):
     """
     Computes the conditional probability of a bigram after being smoothed
     """
-    p_all = n_grams[''.join(w_all)]
-    
-    p_rest = sum([n_grams[ng] for ng in n_grams if w_rest in ng])
+    p_all = n_grams[' '.join(w_all)]
+    p_rest = n_min_1_grams[' '.join(w_rest)]
     if not p_rest:
         return 0.0
     return (float(p_all)/p_rest)
     
 #%% 
 def gt_smooth(c, N, k):    
-    return float( ((c +1)* (N[c+1]/N[c]) - c*(((k+1)*N[k+1])/N[1]) )/(1 - (((k+1)*N[k+1])/N[1] )))
+    numerator = ((c +1)* (float(N[c+1])/N[c]) - c*(float((k+1)*N[k+1])/N[1]) )
+    denominator = 1 - (float((k+1)*N[k+1])/N[1] )
+    
+    return numerator/denominator 
 
 #%%
 def calc_probabilities_seq_file(test_sens, n, n_grams, n_min_1_grams, unigrams, smoothing=None):
