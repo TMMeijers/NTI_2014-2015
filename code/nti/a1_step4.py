@@ -9,6 +9,10 @@ Created on Tue Mar  3 19:56:40 2015
 import re
 import numpy as np
 import itertools as it
+from a1_step1 import make_grams
+from argparse import ArgumentParser
+from collections import Counter, OrderedDict
+from sys import exit
 
 #%%
 def is_end_of_sentence(seq):
@@ -37,23 +41,56 @@ def filter_by_pos(seq):
     return [s for s in seq if len(s) > 1 and not (len(s) == 2 and not s[1][0].isalnum())]
 
 #%%
+def make_language_model(tags, n):
+    return Counter(list(it.chain(*[make_grams(add_start_stop_to_sentence(t, n - 1), n) for t in tags])))
 
-def build_language_model(pos_seq):
-    return 0
+#n_grams = Counter(list(chain(*[parse_ngrams(sen, args.n) for sen in sentences])))
+
+#%%
+def add_start_stop_to_sentence(sentence, n):
+    return ['START'] * n + sentence + ['STOP'] * n
+
+#%%
+def get_tags_from_sentences(sentences):
+    """
+    returns each sentence as a list of pos-tags only
+    """
+    return [[t[1] for t in s] for s in sentences]
+
+#%%
+def fix_splitted(splitted):
+    """
+    takes care of some edge cases where for instance the sentence
+    [ pianist\/bassoonist\/composer/NN ] would become
+    [ pianist, bassoonist, composer, NN] but should actually be
+    [ pianost//bassoonist//composer, NN]
+    """
+    fixed = []
+    for s in splitted:
+        copy = list(s) # copy, list function call is necessary
+        if len(s) > 2:
+            size = len(s)
+            for i in xrange(1, size-1):
+                copy[0] += s[i]
+            copy[1] = copy[size-1]
+            for i in xrange(2, size-1):
+                del copy[i]
+            del copy[-1]
+        fixed.append(copy)
+    return fixed
 
 #%%
 def pos_file_parser(in_file):
     """
     parses in_file
     
-    return something
+    return list of sentences which are list of tuples (word,tag)
     """
     
     sentences = []
     intermediate_sentence = []
     for line in in_file:
-        splitted = [s.split('/') for s in remove_if(line.split(), ['[',']'])]
-        
+        splitted = fix_splitted([s.split('/') for s in remove_if(line.split(), ['[',']'])])
             
         # filter all pos tags which are not alphanumeric
         filtered = filter_by_pos(splitted)
@@ -65,3 +102,28 @@ def pos_file_parser(in_file):
             intermediate_sentence = []
 
     return [[(t[0], t[1]) for t in s] for s in [list(it.chain(*x)) for x in [sen for sen in sentences if sen]]]
+    
+#%%
+if __name__ == "__main__":
+    parser = ArgumentParser(description='Assignment A, Step 4')
+    parser.add_argument('-train-set', dest ='train_file', type=str, help='Path to training file')
+    args = parser.parse_args()
+    
+    # INPUT CHECKS 
+    if not args.train_file:
+        parser.print_help()
+        exit('No training file specified')
+
+    sentences = None    
+    with open(args.train_file) as f: 
+        sentences = pos_file_parser(f)
+    if not sentences:
+        exit('error parsing sentences')
+    
+    tags = get_tags_from_sentences(sentences)
+
+    n = 3
+
+    n_grams = make_language_model(tags, n)
+    n_min1_grams = make_language_model(tags, n - 1)
+    
