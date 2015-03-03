@@ -63,11 +63,20 @@ def fix_splitted(splitted):
     takes care of some edge cases where for instance the sentence
     [ pianist\/bassoonist\/composer/NN ] would become
     [ pianist, bassoonist, composer, NN] but should actually be
-    [ pianost//bassoonist//composer, NN]
+    [ pianost//bassoonist//composer, NN] 
+    
+    and
+    
+    [['read', 'NNP|VBR']] would become
+    [ read, NNP|VBR ] but should become
+    [ read, NNP ] (thus dropping the VBR)
+
     """
     fixed = []
     for s in splitted:
         copy = list(s) # copy, list function call is necessary
+        
+        # composed word edge case
         if len(s) > 2:
             size = len(s)
             for i in xrange(1, size-1):
@@ -76,6 +85,10 @@ def fix_splitted(splitted):
             for i in xrange(2, size-1):
                 del copy[i]
             del copy[-1]
+            
+        # two tags after word edge case
+        if len(copy) > 1 and '|' in copy[1]:
+            copy[1] = copy[1].split('|')[0]
         fixed.append(copy)
     return fixed
 
