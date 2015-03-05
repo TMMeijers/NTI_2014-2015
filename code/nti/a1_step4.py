@@ -32,6 +32,29 @@ class LanguageModel:
         p_rest = self.n_min1_grams[' '.join(tags[:-1])]
     
         return float(p_all) / p_rest if p_rest else 0.0
+        
+    def next_n_min1_grams(self, n_min1_gram):
+        """
+        returns list of tuples that map n_min1_grams to probabilities of transition
+        from n_min1_gram given as argument
+        
+        E.g., on simple.pos:
+        IN:  lang_mod.next_n_min1_grams(['START', 'DT'])
+        OUT: [(('DT', 'JJS'), 0.0), (('DT', 'JJ'), 0.0), (('DT', 'NN'), 1.0)]
+        """
+    
+        first_tag = n_min1_gram[0]
+        last_tag = n_min1_gram[1]
+        next_min1_grams = [[last_tag, t] for t in self.possible_transition_from_tag(last_tag)]
+            
+        probs = [(tuple(n), self.cond_prob([first_tag] + n)) for n in next_min1_grams]
+        return probs
+        
+    def possible_transition_from_tag(self, tag):
+        """
+        returns a list of tags that can follow a certain n_min1_gram
+        """
+        return list(set([t[1] for t in [k.split() for k in self.n_grams.keys()] if t[0] == tag]))
 
 #%%
 class LexicalModel:
@@ -88,6 +111,11 @@ def test():
     
     assert lexi_mod.cond_prob(['Davis\\Zweig', 'NNP']) == 0.16666666666666666, "lexi_mod.cond_prob(['Davis\\Zweig', 'NNP']) should be 0.16666666666666666, but isn't"
     print 'test 3 passed'
+    
+    print 'test transition probabilities on simple.pos without smoothing:'
+    n = lang_mod.next_n_min1_grams(['START', 'DT'])
+    assert n == [(('DT', 'JJS'), 0.0), (('DT', 'JJ'), 0.0), (('DT', 'NN'), 1.0)], "lang_mod.next_n_min1_grams(['START', 'DT']) should be [(('DT', 'JJS'), 0.0), (('DT', 'JJ'), 0.0), (('DT', 'NN'), 1.0)] but isn't"
+    print 'test 1 passed'    
     
     return (lang_mod, lexi_mod)
 
