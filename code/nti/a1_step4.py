@@ -13,6 +13,7 @@ from argparse import ArgumentParser
 from collections import Counter
 from pos_parser import add_start_stop_to_sentence, get_tags_from_sentences, pos_file_parser
 from sys import exit
+from operator import itemgetter
 
 #%%
 # good trial run
@@ -95,19 +96,29 @@ class LexicalModel:
         return float(p_all) / p_rest if p_rest else 0.0
 
 #%%
+def viterbi_path_to_list(vit_path):
+    path = []
+    for i,p in enumerate(vit_path):
+        if i == 0:
+            path += [p[0], p[1]]
+        else:
+            path += [p[1]]
+    return path
+
+#%%
 def viterbi(words, lang_mod, lexi_mod):
     words += ['STOP']
     probs = lang_mod.get_start_probabilites()
 
     tellis = []
 
+    path = {}
     for (i, w) in enumerate(words):
-        print 'test word: ' + w
         tellis.append({})
         next_probs = []
-        
+        new_path = {}
         for p in probs:
-            print '\tprobs: {}'.format(p)
+            #print '\tprobs: {}'.format(p)
             
             tags = p[0]
             p_tags = p[1]
@@ -122,12 +133,12 @@ def viterbi(words, lang_mod, lexi_mod):
             elif tags[-1] == 'STOP':
                 p_emit = 1.0
             
-            print '\tp:' + str(p)
-            print '\tp_emit' + str(p_emit)
-            print '\tp_tags' + str(p_tags)
+            #print '\tp:' + str(p)
+            #print '\tp_emit' + str(p_emit)
+            #print '\tp_tags' + str(p_tags)
             p_total = p_emit * p_tags
 
-            print p_total
+            #print p_total
             # we only expand if we have p_total, no need to do that for
             # zero Probs
             if p_total:
@@ -151,23 +162,21 @@ def viterbi(words, lang_mod, lexi_mod):
                 # add possible expansions
                 next_probs += lang_mod.next_n_min1_grams(tags)
                 
+                if back_pointer:
+                    #print '<- {}'.format(back_pointer)
+                    #print path
+                    if back_pointer in path:
+                        conc = path[back_pointer] + [back_pointer]
+                        new_path[tags] = conc
+                    else:
+                        new_path[tags] = [back_pointer]
+                    #if path[backpointer]
+                    #print new_path
+                
         probs = next_probs
+        path = new_path
         
-    return tellis
-    
-with open('data/s3/simple2.pos') as f:
-    sentences = pos_file_parser(f)
-if not sentences:
-    exit('error parsing sentences')
-tags = get_tags_from_sentences(sentences)
-
-n = 3
-lang_mod = LanguageModel(tags, n)
-lexi_mod = LexicalModel(sentences, tags)
-
-print('\n{0}'.format(viterbi('A day of reckoning'.split(), lang_mod, lexi_mod)))
-
-
+    return tellis, viterbi_path_to_list(path[max(tellis[-1].iteritems(), key=itemgetter(1))[0]][1:])
      
 #%%
 def test():
@@ -238,7 +247,21 @@ def test():
     print 'ALL TESTS PASSED'
         
     return (lang_mod, lexi_mod)
-
+    
+#%%
+def viterbi_test_run():
+    with open('data/s3/WSJ02-21.pos') as f:
+        sentences = pos_file_parser(f)
+    if not sentences:
+        exit('error parsing sentences')
+    tags = get_tags_from_sentences(sentences)
+    
+    n = 3
+    lang_mod = LanguageModel(tags, n)
+    lexi_mod = LexicalModel(sentences, tags)
+    
+    _, path = viterbi('New York is in trouble'.split(), lang_mod, lexi_mod)
+    print path
     
 #%%
 if __name__ == "__main__":
