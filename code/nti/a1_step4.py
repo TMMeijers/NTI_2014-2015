@@ -14,6 +14,44 @@ from argparse import ArgumentParser
 from collections import Counter, OrderedDict
 from sys import exit
 
+class LanguageModel:
+    def __init__(self, tags, n):
+        """
+        initializes language model. 
+        """
+        self.n_grams = Counter(list(it.chain(*[make_grams(add_start_stop_to_sentence(t, n - 1), n) for t in tags])))
+        self.n_min1_grams = Counter(list(it.chain(*[make_grams(add_start_stop_to_sentence(t, n - 2), n - 1) for t in tags])))
+
+    def cond_prob(self, tags):
+        """
+        returns cond probability for a tag N-gram.
+        cond_prob([t1,t2,t3]) = P([t3|t2,t1]) = count('t1 t2 t3')/count('t1 t2')
+        """        
+        p_all = self.n_grams[' '.join(tags)]
+        p_rest = self.n_min1_grams[' '.join(tags[:-1])]
+    
+        return float(p_all) / p_rest if p_rest else 0.0
+
+class LexicalModel:
+    def __init__(self, sentences, tags):
+        """
+        initializes lexical model
+        """
+        self.unigrams = Counter(list(it.chain(*[make_grams(t, 1) for t in tags])))
+        self.word_tag_pairs = Counter([' '.join(wt) for wt in it.chain(*sentences)])
+
+        
+    def cond_prob(self, word_tag_pair):
+        """
+        returns cond probability for tag word combination
+        cond_prob([word, tag]) = P(word|tag) = count('word  tag')/count('tag')
+        """
+        
+        p_all = self.word_tag_pairs[' '.join(word_tag_pair)]
+        p_rest = self.unigrams[word_tag_pair[1]]
+                
+        return float(p_all) / p_rest if p_rest else 0.0
+
 #%%
 def is_end_of_sentence(seq):
     """
@@ -41,13 +79,10 @@ def filter_by_pos(seq):
     return [s for s in seq if len(s) > 1 and not (len(s) == 2 and not s[1][0].isalnum())]
 
 #%%
-def make_language_model(tags, n):
-    return Counter(list(it.chain(*[make_grams(add_start_stop_to_sentence(t, n - 1), n) for t in tags])))
-
-#n_grams = Counter(list(chain(*[parse_ngrams(sen, args.n) for sen in sentences])))
-
-#%%
 def add_start_stop_to_sentence(sentence, n):
+    """
+    Adds n STARTS add the beginning of 'sentence' and n STOPS and the end
+    """
     return ['START'] * n + sentence + ['STOP'] * n
 
 #%%
@@ -137,6 +172,6 @@ if __name__ == "__main__":
 
     n = 3
 
-    n_grams = make_language_model(tags, n)
-    n_min1_grams = make_language_model(tags, n - 1)
+    lang_mod = LanguageModel(tags, n)
+    lexi_mod = LexicalModel(sentences, tags)
     
