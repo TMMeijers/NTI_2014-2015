@@ -15,6 +15,10 @@ from pos_parser import add_start_stop_to_sentence, get_tags_from_sentences, pos_
 from sys import exit
 
 #%%
+# good trial run
+#(lang_mod, lexi_mod) = test(); nm1_gram = ['START', 'DT']; print(lang_mod.next_n_min1_grams(nm1_gram)); print(lexi_mod.emission_prob('A', nm1_gram));
+
+#%%
 class LanguageModel:
     def __init__(self, tags, n):
         """
@@ -65,6 +69,11 @@ class LexicalModel:
         self.unigrams = Counter(list(chain(*[make_grams(t, 1) for t in tags])))
         self.word_tag_pairs = Counter([' '.join(wt) for wt in chain(*sentences)])
 
+    def emission_prob(self, word, n_min1_gram):
+        """
+        given an n_min1_gram, returns emission probability
+        """
+        return self.cond_prob([word, n_min1_gram[1]])
         
     def cond_prob(self, word_tag_pair):
         """
@@ -91,31 +100,47 @@ def test():
     n = 3
     lang_mod = LanguageModel(tags, n)
     
-    assert lang_mod.cond_prob(['START', 'DT', 'NN']) == 1.0, "lang_mod.cond_prob(['START', 'DT', 'NN']) should be 1.0 but isn't"
+    assert lang_mod.cond_prob(['START', 'DT', 'NN']) == 1.0, 'test 1 failed'
     print 'test 1 passed'
     
-    assert lang_mod.cond_prob(['JJ', 'NN', 'NNS']) == 0.3333333333333333, "lang_mod.cond_prob(['JJ', 'NN', 'NNS']) should be 0.3333333333333333 but isn't"
+    assert lang_mod.cond_prob(['JJ', 'NN', 'NNS']) == 0.3333333333333333, 'test 2 failed'
     print 'test 2 passed'
     
-    assert lang_mod.cond_prob(['NN', 'IN', 'DT']) == 0.5, "lang_mod.cond_prob(['NN', 'IN', 'DT']) should be 0.5 but isn't"
+    assert lang_mod.cond_prob(['NN', 'IN', 'DT']) == 0.5, 'test 3 failed'
     print 'test 3 passed'
         
     print 'test lexical model on simple.pos without smoothing:'
     lexi_mod = LexicalModel(sentences, tags)
     
-    assert lexi_mod.cond_prob(['firm', 'NN']) == 0.0, "lexi_mod.cond_prob(['firm', 'NN']) should be 0.0 but isn't"
+    assert lexi_mod.cond_prob(['firm', 'NN']) == 0.0, 'test 1 failed'
     print 'test 1 passed'
     
-    assert lexi_mod.cond_prob(['investment', 'NN']) == 0.2, "lexi_mod.cond_prob(['investment', 'NN']) should be 0.2 but isn't"
+    assert lexi_mod.cond_prob(['investment', 'NN']) == 0.2, 'test 2 failed'
     print 'test 2 passed'
     
-    assert lexi_mod.cond_prob(['Davis\\Zweig', 'NNP']) == 0.16666666666666666, "lexi_mod.cond_prob(['Davis\\Zweig', 'NNP']) should be 0.16666666666666666, but isn't"
+    assert lexi_mod.cond_prob(['Davis\\Zweig', 'NNP']) == 0.16666666666666666, 'test 3 failed'
     print 'test 3 passed'
     
     print 'test transition probabilities on simple.pos without smoothing:'
     n = lang_mod.next_n_min1_grams(['START', 'DT'])
-    assert n == [(('DT', 'JJS'), 0.0), (('DT', 'JJ'), 0.0), (('DT', 'NN'), 1.0)], "lang_mod.next_n_min1_grams(['START', 'DT']) should be [(('DT', 'JJS'), 0.0), (('DT', 'JJ'), 0.0), (('DT', 'NN'), 1.0)] but isn't"
+    assert n == [(('DT', 'JJS'), 0.0), (('DT', 'JJ'), 0.0), (('DT', 'NN'), 1.0)], 'test 1 failed'
     print 'test 1 passed'    
+    
+    n = lang_mod.next_n_min1_grams(['DT', 'NN'])
+    assert n == [(('NN', 'MD'), 0.3333333333333333), (('NN', 'NN'), 0.0), (('NN', 'JJ'), 0.3333333333333333),
+                 (('NN', 'IN'), 0.3333333333333333), (('NN', 'VBZ'), 0.0), (('NN', 'NNS'), 0.0)], "test 2 failed"
+    print 'test 2 passed'
+
+    
+    print 'test emission probabilities on simple.pos without smoothing:'
+    assert lexi_mod.emission_prob('A', ['START', 'DT']) == 0.16666666666666666, 'test 1 failed'
+    print 'test 1 passed'
+    
+    assert lexi_mod.emission_prob('of', ['NN', 'IN']) == 0.6666666666666666, 'test 2 failed'
+    print 'test 2 passed'
+    
+    assert lexi_mod.emission_prob('on', ['NN', 'IN']) == 0.3333333333333333, 'test 3 failed'
+    print 'test 3 passed'
     
     return (lang_mod, lexi_mod)
 
