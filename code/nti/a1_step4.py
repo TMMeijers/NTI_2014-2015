@@ -199,7 +199,6 @@ def test():
     assert lang_mod.cond_prob(['NN', 'IN', 'DT']) == 0.5, "lang_mod.cond_prob(['NN', 'IN', 'DT']) should be 0.5 but isn't"
     print 'test 3 passed'
         
-    
     print 'test lexical model on simple.pos without smoothing:'
     lexi_mod = LexicalModel(sentences, tags)
     
