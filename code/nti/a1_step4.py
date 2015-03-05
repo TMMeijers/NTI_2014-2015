@@ -20,8 +20,8 @@ class LanguageModel:
         """
         initializes language model. 
         """
-        self.n_grams = Counter(list(chain(*[make_grams(add_start_stop_to_sentence(t, n - 1), n) for t in tags])))
-        self.n_min1_grams = Counter(list(chain(*[make_grams(add_start_stop_to_sentence(t, n - 1), n - 1) for t in tags])))
+        self.n_grams = Counter(list(chain(*[make_grams(add_start_stop_to_sentence(t, 1), n) for t in tags])))
+        self.n_min1_grams = Counter(list(chain(*[make_grams(add_start_stop_to_sentence(t, 1), n - 1) for t in tags])))
 
     def cond_prob(self, tags):
         """
@@ -68,7 +68,7 @@ def test():
     n = 3
     lang_mod = LanguageModel(tags, n)
     
-    assert lang_mod.cond_prob(['START', 'START', 'DT']) == 1.0, "lang_mod.cond_prob(['START', 'START', 'DT']) should be 1.0 but isn't"
+    assert lang_mod.cond_prob(['START', 'DT', 'NN']) == 1.0, "lang_mod.cond_prob(['START', 'DT', 'NN']) should be 1.0 but isn't"
     print 'test 1 passed'
     
     assert lang_mod.cond_prob(['JJ', 'NN', 'NNS']) == 0.3333333333333333, "lang_mod.cond_prob(['JJ', 'NN', 'NNS']) should be 0.3333333333333333 but isn't"
@@ -88,6 +88,8 @@ def test():
     
     assert lexi_mod.cond_prob(['Davis\\Zweig', 'NNP']) == 0.16666666666666666, "lexi_mod.cond_prob(['Davis\\Zweig', 'NNP']) should be 0.16666666666666666, but isn't"
     print 'test 3 passed'
+    
+    return (lang_mod, lexi_mod)
 
     
 #%%
