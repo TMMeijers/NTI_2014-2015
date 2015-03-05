@@ -14,13 +14,14 @@ from argparse import ArgumentParser
 from collections import Counter, OrderedDict
 from sys import exit
 
+#%%
 class LanguageModel:
     def __init__(self, tags, n):
         """
         initializes language model. 
         """
         self.n_grams = Counter(list(it.chain(*[make_grams(add_start_stop_to_sentence(t, n - 1), n) for t in tags])))
-        self.n_min1_grams = Counter(list(it.chain(*[make_grams(add_start_stop_to_sentence(t, n - 2), n - 1) for t in tags])))
+        self.n_min1_grams = Counter(list(it.chain(*[make_grams(add_start_stop_to_sentence(t, n - 1), n - 1) for t in tags])))
 
     def cond_prob(self, tags):
         """
@@ -32,6 +33,7 @@ class LanguageModel:
     
         return float(p_all) / p_rest if p_rest else 0.0
 
+#%%
 class LexicalModel:
     def __init__(self, sentences, tags):
         """
@@ -174,4 +176,38 @@ if __name__ == "__main__":
 
     lang_mod = LanguageModel(tags, n)
     lexi_mod = LexicalModel(sentences, tags)
+        
+#%%
+def test():
+    with open('data/s3/simple.pos') as f: 
+        sentences = pos_file_parser(f)
+    if not sentences:
+        exit('error parsing sentences')
     
+    tags = get_tags_from_sentences(sentences)
+
+    print 'test language model on simple.pos without smoothing:'
+    n = 3
+    lang_mod = LanguageModel(tags, n)
+    
+    assert lang_mod.cond_prob(['START', 'START', 'DT']) == 1.0, "lang_mod.cond_prob(['START', 'START', 'DT']) should be 1.0 but isn't"
+    print 'test 1 passed'
+    
+    assert lang_mod.cond_prob(['JJ', 'NN', 'NNS']) == 0.3333333333333333, "lang_mod.cond_prob(['JJ', 'NN', 'NNS']) should be 0.3333333333333333 but isn't"
+    print 'test 2 passed'
+    
+    assert lang_mod.cond_prob(['NN', 'IN', 'DT']) == 0.5, "lang_mod.cond_prob(['NN', 'IN', 'DT']) should be 0.5 but isn't"
+    print 'test 3 passed'
+        
+    
+    print 'test lexical model on simple.pos without smoothing:'
+    lexi_mod = LexicalModel(sentences, tags)
+    
+    assert lexi_mod.cond_prob(['firm', 'NN']) == 0.0, "lexi_mod.cond_prob(['firm', 'NN']) should be 0.0 but isn't"
+    print 'test 1 passed'
+    
+    assert lexi_mod.cond_prob(['investment', 'NN']) == 0.2, "lexi_mod.cond_prob(['investment', 'NN']) should be 0.2 but isn't"
+    print 'test 2 passed'
+    
+    assert lexi_mod.cond_prob(['Davis\\Zweig', 'NNP']) == 0.16666666666666666, "lexi_mod.cond_prob(['Davis\\Zweig', 'NNP']) should be 0.16666666666666666, but isn't"
+    print 'test 3 passed'
