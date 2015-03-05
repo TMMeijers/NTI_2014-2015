@@ -111,15 +111,13 @@ def viterbi(words, lang_mod, lexi_mod):
     probs = lang_mod.get_start_probabilites()
 
     tellis = []
-
     path = {}
+    
     for (i, w) in enumerate(words):
         tellis.append({})
         next_probs = []
         new_path = {}
         for p in probs:
-            #print '\tprobs: {}'.format(p)
-            
             tags = p[0]
             p_tags = p[1]
             
@@ -132,10 +130,7 @@ def viterbi(words, lang_mod, lexi_mod):
             # emission P is logically 1.0
             elif tags[-1] == 'STOP':
                 p_emit = 1.0
-            
-            #print '\tp:' + str(p)
-            #print '\tp_emit' + str(p_emit)
-            #print '\tp_tags' + str(p_tags)
+
             p_total = p_emit * p_tags
 
             #print p_total
@@ -163,15 +158,11 @@ def viterbi(words, lang_mod, lexi_mod):
                 next_probs += lang_mod.next_n_min1_grams(tags)
                 
                 if back_pointer:
-                    #print '<- {}'.format(back_pointer)
-                    #print path
                     if back_pointer in path:
                         conc = path[back_pointer] + [back_pointer]
                         new_path[tags] = conc
                     else:
                         new_path[tags] = [back_pointer]
-                    #if path[backpointer]
-                    #print new_path
                 
         probs = next_probs
         path = new_path
