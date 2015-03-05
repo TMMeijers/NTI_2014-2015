@@ -232,10 +232,11 @@ def test():
         assert lang_mod.get_start_probabilites() == [(('START', 'NNPX'), 0.5), (('START', 'DT'), 0.5)], 'test 4 failed'
         print 'test 4 passed'
         
+        print 'ALL TESTS PASSED'
     except AssertionError as e:
         print e
         
-    print 'ALL TESTS PASSED'
+    
         
     return (lang_mod, lexi_mod)
     
