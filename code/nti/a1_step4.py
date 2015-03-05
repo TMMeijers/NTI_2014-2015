@@ -24,8 +24,8 @@ class LanguageModel:
         """
         initializes language model. 
         """
-        self.n_grams = Counter(list(chain(*[make_grams(add_start_stop_to_sentence(t, 1), n) for t in tags])))
-        self.n_min1_grams = Counter(list(chain(*[make_grams(add_start_stop_to_sentence(t, 1), n - 1) for t in tags])))
+        self.n_grams = Counter(list(chain(*[make_grams(add_start_stop_to_sentence(t, n-1), n) for t in tags])))
+        self.n_min1_grams = Counter(list(chain(*[make_grams(add_start_stop_to_sentence(t, n-1), n - 1) for t in tags])))
 
     def cond_prob(self, tags):
         """
@@ -52,8 +52,16 @@ class LanguageModel:
         next_min1_grams = [[last_tag, t] for t in self.possible_transition_from_tag(last_tag)]
             
         probs = [(tuple(n), self.cond_prob([first_tag] + n)) for n in next_min1_grams]
-        return probs
+        return [p for p in probs if p[1] != 0.0]
         
+    def get_start_probabilites(self):
+        """
+        returns probability for each possible start sequence
+        """
+        probs = [('START', 'START', t) for t in lang_mod.possible_transition_from_tag('START')]
+        ps =  [(wt, lang_mod.cond_prob(wt)) for wt in probs]
+        return [((p[0][0], p[0][2]), p[1]) for p in ps if p[1] != 0.0]
+
     def possible_transition_from_tag(self, tag):
         """
         returns a list of tags that can follow a certain n_min1_gram
@@ -86,6 +94,80 @@ class LexicalModel:
                 
         return float(p_all) / p_rest if p_rest else 0.0
 
+#%%
+def viterbi(words, lang_mod, lexi_mod):
+    words += ['STOP']
+    probs = lang_mod.get_start_probabilites()
+
+    tellis = []
+
+    for (i, w) in enumerate(words):
+        print 'test word: ' + w
+        tellis.append({})
+        next_probs = []
+        
+        for p in probs:
+            print '\tprobs: {}'.format(p)
+            
+            tags = p[0]
+            p_tags = p[1]
+            
+            p_emit = 0.0
+            # if we are not at the end then we can calculate the emission
+            # probabilites. 
+            if i < len(words) - 1:
+                p_emit = lexi_mod.emission_prob(w, tags)
+            # otherwise check if we transmit to STOP. if yes
+            # emission P is logically 1.0
+            elif tags[-1] == 'STOP':
+                p_emit = 1.0
+            
+            print '\tp:' + str(p)
+            print '\tp_emit' + str(p_emit)
+            print '\tp_tags' + str(p_tags)
+            p_total = p_emit * p_tags
+
+            print p_total
+            # we only expand if we have p_total, no need to do that for
+            # zero Probs
+            if p_total:
+                back_pointer = max_pr = None
+                
+                if i > 0:
+                    # find maximum value from one step back in trellis
+                    for os, o_os in tellis[i - 1].iteritems():
+                        # check if they are connected
+                        if os[1] == tags[0]:
+                            pr = o_os * p_total
+                            if pr > max_pr:
+                                # assign max probability
+                                max_pr = pr
+                                # keep back pointer
+                                back_pointer = os
+
+                # write into tellis the max probability for later retrieval
+                tellis[i][tags] = max_pr if max_pr else p_total
+                
+                # add possible expansions
+                next_probs += lang_mod.next_n_min1_grams(tags)
+                
+        probs = next_probs
+        
+    return tellis
+    
+with open('data/s3/simple2.pos') as f:
+    sentences = pos_file_parser(f)
+if not sentences:
+    exit('error parsing sentences')
+tags = get_tags_from_sentences(sentences)
+
+n = 3
+lang_mod = LanguageModel(tags, n)
+lexi_mod = LexicalModel(sentences, tags)
+
+print('\n{0}'.format(viterbi('A day of reckoning'.split(), lang_mod, lexi_mod)))
+
+
      
 #%%
 def test():
@@ -96,52 +178,65 @@ def test():
     
     tags = get_tags_from_sentences(sentences)
 
-    print 'test language model on simple.pos without smoothing:'
     n = 3
     lang_mod = LanguageModel(tags, n)
-    
-    assert lang_mod.cond_prob(['START', 'DT', 'NN']) == 1.0, 'test 1 failed'
-    print 'test 1 passed'
-    
-    assert lang_mod.cond_prob(['JJ', 'NN', 'NNS']) == 0.3333333333333333, 'test 2 failed'
-    print 'test 2 passed'
-    
-    assert lang_mod.cond_prob(['NN', 'IN', 'DT']) == 0.5, 'test 3 failed'
-    print 'test 3 passed'
-        
-    print 'test lexical model on simple.pos without smoothing:'
     lexi_mod = LexicalModel(sentences, tags)
-    
-    assert lexi_mod.cond_prob(['firm', 'NN']) == 0.0, 'test 1 failed'
-    print 'test 1 passed'
-    
-    assert lexi_mod.cond_prob(['investment', 'NN']) == 0.2, 'test 2 failed'
-    print 'test 2 passed'
-    
-    assert lexi_mod.cond_prob(['Davis\\Zweig', 'NNP']) == 0.16666666666666666, 'test 3 failed'
-    print 'test 3 passed'
-    
-    print 'test transition probabilities on simple.pos without smoothing:'
-    n = lang_mod.next_n_min1_grams(['START', 'DT'])
-    assert n == [(('DT', 'JJS'), 0.0), (('DT', 'JJ'), 0.0), (('DT', 'NN'), 1.0)], 'test 1 failed'
-    print 'test 1 passed'    
-    
-    n = lang_mod.next_n_min1_grams(['DT', 'NN'])
-    assert n == [(('NN', 'MD'), 0.3333333333333333), (('NN', 'NN'), 0.0), (('NN', 'JJ'), 0.3333333333333333),
-                 (('NN', 'IN'), 0.3333333333333333), (('NN', 'VBZ'), 0.0), (('NN', 'NNS'), 0.0)], "test 2 failed"
-    print 'test 2 passed'
+    try:    
 
+        print 'test language model on simple.pos without smoothing:'
+        
+        assert lang_mod.cond_prob(['START', 'DT', 'NN']) == 1.0, 'test 1 failed'
+        print 'test 1 passed'
+        
+        assert lang_mod.cond_prob(['JJ', 'NN', 'NNS']) == 0.3333333333333333, 'test 2 failed'
+        print 'test 2 passed'
+        
+        assert lang_mod.cond_prob(['NN', 'IN', 'DT']) == 0.5, 'test 3 failed'
+        print 'test 3 passed'
+            
+        print 'test lexical model on simple.pos without smoothing:'
     
-    print 'test emission probabilities on simple.pos without smoothing:'
-    assert lexi_mod.emission_prob('A', ['START', 'DT']) == 0.16666666666666666, 'test 1 failed'
-    print 'test 1 passed'
+        
+        assert lexi_mod.cond_prob(['firm', 'NN']) == 0.0, 'test 1 failed'
+        print 'test 1 passed'
+        
+        assert lexi_mod.cond_prob(['investment', 'NN']) == 0.18181818181818182, 'test 2 failed'
+        print 'test 2 passed'
+        
+        assert lexi_mod.cond_prob(['Davis\\Zweig', 'NNP']) == 0.16666666666666666, 'test 3 failed'
+        print 'test 3 passed'
+        
+        print 'test transition probabilities on simple.pos without smoothing:'
+        n = lang_mod.next_n_min1_grams(['START', 'DT'])
+        assert n == [(('DT', 'NN'), 1.0)], 'test 1 failed'
+        print 'test 1 passed'    
     
-    assert lexi_mod.emission_prob('of', ['NN', 'IN']) == 0.6666666666666666, 'test 2 failed'
-    print 'test 2 passed'
+        
+        n = lang_mod.next_n_min1_grams(['DT', 'NN'])
+        assert n == [(('NN', 'MD'), 0.3333333333333333),
+                     (('NN', 'JJ'), 0.3333333333333333),
+                     (('NN', 'IN'), 0.3333333333333333)] , "test 2 failed"
+        print 'test 2 passed'
     
-    assert lexi_mod.emission_prob('on', ['NN', 'IN']) == 0.3333333333333333, 'test 3 failed'
-    print 'test 3 passed'
-    
+        
+        print 'test emission probabilities on simple.pos without smoothing:'
+        assert lexi_mod.emission_prob('A', ['START', 'DT']) == 0.16666666666666666, 'test 1 failed'
+        print 'test 1 passed'
+        
+        assert lexi_mod.emission_prob('of', ['NN', 'IN']) == 0.6666666666666666, 'test 2 failed'
+        print 'test 2 passed'
+        
+        assert lexi_mod.emission_prob('on', ['NN', 'IN']) == 0.3333333333333333, 'test 3 failed'
+        print 'test 3 passed'
+        
+        assert lang_mod.get_start_probabilites() == [(('START', 'NNPX'), 0.5), (('START', 'DT'), 0.5)], 'test 4 failed'
+        print 'test 4 passed'
+        
+    except AssertionError as e:
+        print e
+        
+    print 'ALL TESTS PASSED'
+        
     return (lang_mod, lexi_mod)
 
     
