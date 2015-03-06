@@ -322,18 +322,9 @@ def viterbi_test_run(smooth=False):
     print 'New York is in KAUDERWELSCH: ' + str(path)
     
 #%%
-if __name__ == "__main__":
-    parser = ArgumentParser(description='Assignment A, Step 4')
-    parser.add_argument('-train-set', dest ='train_file', type=str, help='Path to training file')
-    args = parser.parse_args()
-    
-    # INPUT CHECKS 
-    if not args.train_file:
-        parser.print_help()
-        exit('No training file specified')
-
+def train_and_test(train_file, test_file, smooth, out_file):    
     sentences = None    
-    with open(args.train_file) as f: 
+    with open(train_file) as f: 
         sentences = pos_file_parser(f)
     if not sentences:
         exit('error parsing sentences')
@@ -342,5 +333,51 @@ if __name__ == "__main__":
 
     n = 3
 
-    lang_mod = LanguageModel(tags, n)
-    lexi_mod = LexicalModel(sentences, tags)
+    lang_mod = LanguageModel(tags, n, smooth)
+    lexi_mod = LexicalModel(sentences, tags, smooth)
+    
+    path = viterbi('New York is in trouble'.split(), lang_mod, lexi_mod)
+    print 'New York is in trouble: ' + str(path)
+    
+    path = viterbi('New York is in KAUDERWELSCH'.split(), lang_mod, lexi_mod)
+    print 'New York is in KAUDERWELSCH: ' + str(path)    
+    
+    # predict from test set and write to file
+    
+#%%
+if __name__ == "__main__":
+    parser = ArgumentParser(description='Assignment A, Step 4')
+    parser.add_argument('-train-set', dest ='train_file', type=str, default=None, help='Path to training file')
+    parser.add_argument('-test-set', dest='test_file', type=str, default=None, help='Path to test file')
+    parser.add_argument('-smoothing', dest='smooth',type=str, default=None, help='Use good-turing (yes/no)')
+    parser.add_argument('-test-set-predicated', dest='test_set_pred', default=None, type=str, help='Path to file with predictions')
+    args = parser.parse_args()
+    
+    # INPUT CHECKS 
+
+    if not args.train_file:
+        parser.print_help()
+        exit('No training file specified (-train-set)')
+    if not args.smooth:
+        parser.print_help()
+        exit('You must indiciate wether you want to use smoothing or not (-smooth))')
+    if not args.test_file:
+        parser.print_help()
+        exit('No test set file specified (-test-file)')
+    if not args.test_set_pred:
+        parser.print_help()
+        exit('No file specified where you want the results to be written to')
+        
+    if args.smooth == 'yes':
+        args.smooth = True
+    elif args.smooth == 'no':
+        args.smooth = False
+    else:
+        parser.print_help()
+        exit('-smooth must be [yes|no]')
+        
+    train_and_test(args.train_file, args.test_file, args.smooth, args.test_set_pred)
+
+        
+
+    
