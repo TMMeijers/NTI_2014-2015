@@ -55,23 +55,26 @@ def gt_smoothing(test_sens, n, n_grams, unigrams):
     """
     Applies good-turing smoothing to the bi-gram model
     """
-    # Total unseen events    
-    Nzero = unigrams**2 - len(n_grams)
-    #Upper bound for smoothing    
-    k = 5    
-    # Frequency of frequencies for frequencies of 0 to 6
-    N = {i : len([ngram for ngram in n_grams.values() if ngram is i]) for i in xrange(k+2) if i is not 0}
-    N[0] = Nzero
-    
-    
-    #Smoothe the bi-gram model 
-    for ng in n_grams:
-        if  n_grams[ng] < 6 and n_grams[ng] > 0:
-            n_grams[ng] = gt_smooth(n_grams[ng], N, k)
-    #Smoothe unigrams
+    n_grams = gt_smoothe(n_grams, unigrams, 5)    
     n_min_1_grams = gt_smoothe_min_1(n_grams)
     
     return {' '.join(seq) : seq_prob_gt(seq, n, n_grams, n_min_1_grams, N, unigrams) for seq in test_sens}
+
+
+def gt_smoothe(n_grams, unigrams, k):    
+    # Total unseen events    
+    Nzero = unigrams**2 - len(n_grams)
+    # Frequency of frequencies for frequencies of 0 to 6
+    
+    N = {i : len([ngram for ngram in n_grams.values() if ngram is i]) for i in xrange(k+2) if i is not 0}
+    N[0] = Nzero
+    
+    #Smoothe the bi-gram model 
+    for ng in n_grams:
+        if  n_grams[ng] < (k+1) and n_grams[ng] > 0:
+            n_grams[ng] = gt_smooth(n_grams[ng], N, k)
+    return n_grams
+    
 
 #%%
 def gt_smoothe_min_1(n_grams):    

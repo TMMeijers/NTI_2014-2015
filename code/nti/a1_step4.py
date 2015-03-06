@@ -13,6 +13,8 @@ from argparse import ArgumentParser
 from collections import Counter
 from pos_parser import add_start_stop_to_sentence, get_tags_from_sentences, pos_file_parser
 from sys import exit
+from a1_step3 import gt_smooth, gt_smoothe_min_1
+import sets
 
 #%%
 # good trial run
@@ -20,22 +22,36 @@ from sys import exit
 
 #%%
 class LanguageModel:
-    def __init__(self, tags, n):
+    def __init__(self, tags, n, smoothe):
         """
         initializes language model. 
         """
         self.n_grams = Counter(list(chain(*[make_grams(add_start_stop_to_sentence(t, 1), n) for t in tags])))
-        self.n_min1_grams = Counter(list(chain(*[make_grams(add_start_stop_to_sentence(t, 1), n - 1) for t in tags])))
-
+        self.n_min1_grams = Counter(list(chain(*[make_grams(add_start_stop_to_sentence(t, 1), n - 1) for t in tags])))        
+        if smoothe:
+            self.smoothed = True
+            self.unigrams = len(list(chain(*[make_grams(add_start_stop_to_sentence(t, 1), 1) for t in tags])))            
+            self.N = {i : len([n_gram for n_gram in self.n_grams.values() if n_gram is i]) for i in xrange(6) if i is not 0}
+            self.N[0] = self.unigrams**2 - len(self.n_grams)
+            self.smoothe()          
+            self.n_min1_grams = gt_smoothe_min_1(self.n_grams)    
+        
+           
+        
     def cond_prob(self, tags):
         """
         returns cond probability for a tag N-gram.
         cond_prob([t1,t2,t3]) = P([t3|t2,t1]) = count('t1 t2 t3')/count('t1 t2')
         """        
-        p_all = self.n_grams[' '.join(tags)]
-        p_rest = self.n_min1_grams[' '.join(tags[:-1])]
-    
-        return float(p_all) / p_rest if p_rest else 0.0
+        t_all = ' '.join(tags)
+        if t_all in self.n_grams: 
+            p_all = self.n_grams[t_all]
+            p_rest = self.n_min1_grams[' '.join(tags[:-1])]
+            return float(p_all) / p_rest if p_rest else 0.0
+        elif self.smoothed:
+            return float(self.N[1])/(self.N[0]*len(self.n_grams))
+        else:
+            return 0.0
         
     def next_n_min1_grams(self, n_min1_gram):
         """
@@ -59,16 +75,27 @@ class LanguageModel:
         returns a list of tags that can follow a certain n_min1_gram
         """
         return list(set([t[1] for t in [k.split() for k in self.n_grams.keys()] if t[0] == tag]))
-
+    
+    def smoothe(self):
+        k = 4
+        for ng in self.n_grams:
+            if  self.n_grams[ng] < (k+1) and self.n_grams[ng] > 0:
+                self.n_grams[ng] = gt_smooth(self.n_grams[ng], self.N, k)
+        
 #%%
 class LexicalModel:
-    def __init__(self, sentences, tags):
+    def __init__(self, sentences, tags, smoothe):
         """
         initializes lexical model
         """
         self.unigrams = Counter(list(chain(*[make_grams(t, 1) for t in tags])))
         self.word_tag_pairs = Counter([' '.join(wt) for wt in chain(*sentences)])
-
+        if smoothe:
+            self.smoothed = True
+            self.words = set([wt[0] for wt in chain(*sentences)])
+            self.smooth()
+            
+            
     def emission_prob(self, word, n_min1_gram):
         """
         given an n_min1_gram, returns emission probability
@@ -80,13 +107,42 @@ class LexicalModel:
         returns cond probability for tag word combination
         cond_prob([word, tag]) = P(word|tag) = count('word  tag')/count('tag')
         """
+        wtpair = ' '.join(word_tag_pair)
+        p_rest = self.unigrams[word_tag_pair[1]]        
+        if wtpair in word_tag_pairs:
+            p_all = self.word_tag_pairs[wtpair]
+            return float(p_all) / p_rest if p_rest else 0.0
         
-        p_all = self.word_tag_pairs[' '.join(word_tag_pair)]
-        p_rest = self.unigrams[word_tag_pair[1]]
+        elif self.smoothed and word_tag_pair[0] not in self.words:
+            return 0.5*float(self.N1[word_tag_pair[1]])/ p_rest if p_rest else 0.0
+        else:
+            return 0.0
+            
+    def smooth(self):
+        """
+        Smoothes the word-tag pairs and then the tags
+        """        
+        for pair in self.word_tag_pairs:
+            if self.word_tag_pairs[pair] is 1:
+                self.word_tag_pairs[pair] = 0.5
+        
+        #Smoothe the tags in the lexical model
+        tags = [key.split()[1] for key in self.word_tag_pairs.iterkeys()]
+        
+        copy = zip(tags, self.word_tag_pairs.itervalues())
+        self.unigrams = {tag : 0 for tag in tags}
+        self.N1 = {tag : 0 for tag in tags}        
+        for thing in copy:
+            self.unigrams[thing[0]] += thing[1]
+            #Counts the instances of tag-word-pairs that only occur once per tag            
+            if thing[1] is 0.5:
+                self.N1[thing[0]] += 1
+        
+        self.unigrams = Counter(self.unigrams)
+        self.N1 = Counter(self.N1)
+        #Get the N1s for each word tag
                 
-        return float(p_all) / p_rest if p_rest else 0.0
-
-     
+        
 #%%
 def test():
     with open('data/s3/simple.pos') as f: 
@@ -98,8 +154,7 @@ def test():
 
     print 'test language model on simple.pos without smoothing:'
     n = 3
-    lang_mod = LanguageModel(tags, n)
-    
+    lang_mod = LanguageModel(tags, n, None)
     assert lang_mod.cond_prob(['START', 'DT', 'NN']) == 1.0, 'test 1 failed'
     print 'test 1 passed'
     
@@ -110,8 +165,9 @@ def test():
     print 'test 3 passed'
         
     print 'test lexical model on simple.pos without smoothing:'
-    lexi_mod = LexicalModel(sentences, tags)
-    
+    loch_mod = LexicalModel(sentences, tags, None)    
+    lexi_mod = LexicalModel(sentences, tags, 'yes')
+    return
     assert lexi_mod.cond_prob(['firm', 'NN']) == 0.0, 'test 1 failed'
     print 'test 1 passed'
     
