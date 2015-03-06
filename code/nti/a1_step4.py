@@ -27,15 +27,20 @@ class LanguageModel:
         """
         initializes language model. 
         """
-        self.n_grams = Counter(list(chain(*[make_grams(add_start_stop_to_sentence(t, 1), n) for t in tags])))
-        self.n_min1_grams = Counter(list(chain(*[make_grams(add_start_stop_to_sentence(t, 1), n - 1) for t in tags])))        
+        
+        self.smoothed = False
         if smoothe:
             self.smoothed = True
+            self.n_grams = Counter(list(chain(*[make_grams(add_start_stop_to_sentence(t, 1), n) for t in tags])))
+            self.n_min1_grams = Counter(list(chain(*[make_grams(add_start_stop_to_sentence(t, 1), n - 1) for t in tags])))    
             unigrams = len(list(chain(*[make_grams(add_start_stop_to_sentence(t, 1), 1) for t in tags])))            
             self.N = {i : len([n_gram for n_gram in self.n_grams.values() if n_gram is i]) for i in xrange(6) if i is not 0}
             self.N[0] = unigrams**2 - len(self.n_grams)
             self.smoothe()          
             self.n_min1_grams = gt_smoothe_min_1(self.n_grams)    
+        else:
+            self.n_grams = Counter(list(chain(*[make_grams(add_start_stop_to_sentence(t, n-1), n) for t in tags])))
+            self.n_min1_grams = Counter(list(chain(*[make_grams(add_start_stop_to_sentence(t, n-1), n - 1) for t in tags]))) 
         
            
     def cond_prob(self, tags):
@@ -74,8 +79,8 @@ class LanguageModel:
         """
         returns probability for each possible start sequence
         """
-        probs = [('START', 'START', t) for t in lang_mod.possible_transition_from_tag('START')]
-        ps =  [(wt, lang_mod.cond_prob(wt)) for wt in probs]
+        probs = [('START', 'START', t) for t in self.possible_transition_from_tag('START')]
+        ps =  [(wt, self.cond_prob(wt)) for wt in probs]
         return [((p[0][0], p[0][2]), p[1]) for p in ps if p[1] != 0.0]
 
     def possible_transition_from_tag(self, tag):
@@ -85,9 +90,9 @@ class LanguageModel:
         return list(set([t[1] for t in [k.split() for k in self.n_grams.keys()] if t[0] == tag]))
     
     def smoothe(self):
-		"""
-		Smoothes the language model
-		"""
+        """
+        Smoothes the language model
+        """
         k = 4
         for ng in self.n_grams:
             if  self.n_grams[ng] < (k+1) and self.n_grams[ng] > 0:
@@ -101,6 +106,7 @@ class LexicalModel:
         """
         self.unigrams = Counter(list(chain(*[make_grams(t, 1) for t in tags])))
         self.word_tag_pairs = Counter([' '.join(wt) for wt in chain(*sentences)])
+        self.smoothed = False
         if smoothe:
             self.smoothed = True
             self.words = set([wt[0] for wt in chain(*sentences)])
@@ -120,7 +126,7 @@ class LexicalModel:
         """
         wtpair = ' '.join(word_tag_pair)
         p_rest = self.unigrams[word_tag_pair[1]]        
-        if wtpair in word_tag_pairs:
+        if wtpair in self.word_tag_pairs:
             p_all = self.word_tag_pairs[wtpair]
             return float(p_all) / p_rest if p_rest else 0.0
         
@@ -226,7 +232,10 @@ def viterbi(words, lang_mod, lexi_mod):
         probs = next_probs
         path = new_path
         
-    return tellis, viterbi_path_to_list(path[max(tellis[-1].iteritems(), key=itemgetter(1))[0]][1:])
+    if len(tellis[-1]) > 0:
+        return viterbi_path_to_list(path[max(tellis[-1].iteritems(), key=itemgetter(1))[0]][1:])
+    else:
+        return []
      
 #%%
 def test(smoothe):
@@ -307,10 +316,10 @@ def viterbi_test_run():
     tags = get_tags_from_sentences(sentences)
     
     n = 3
-    lang_mod = LanguageModel(tags, n)
-    lexi_mod = LexicalModel(sentences, tags)
+    lang_mod = LanguageModel(tags, n, False)
+    lexi_mod = LexicalModel(sentences, tags, False)
     
-    _, path = viterbi('New York is in trouble'.split(), lang_mod, lexi_mod)
+    path = viterbi('New York is in trouble'.split(), lang_mod, lexi_mod)
     print path
     
 #%%
