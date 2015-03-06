@@ -308,7 +308,7 @@ def test(smoothe):
     return (lang_mod, lexi_mod)
     
 #%%
-def viterbi_test_run():
+def viterbi_test_run(smooth=False):
     with open('data/s3/WSJ02-21.pos') as f:
         sentences = pos_file_parser(f)
     if not sentences:
@@ -316,8 +316,9 @@ def viterbi_test_run():
     tags = get_tags_from_sentences(sentences)
     
     n = 3
-    lang_mod = LanguageModel(tags, n, False)
-    lexi_mod = LexicalModel(sentences, tags, False)
+
+    lang_mod = LanguageModel(tags, n, smooth)
+    lexi_mod = LexicalModel(sentences, tags, smooth)
     
     path = viterbi('New York is in trouble'.split(), lang_mod, lexi_mod)
     print path
