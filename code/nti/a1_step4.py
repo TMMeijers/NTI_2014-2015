@@ -394,7 +394,7 @@ if __name__ == "__main__":
     else:
         parser.print_help()
         exit('-smooth must be [yes|no]')
-        
+         
     train_and_test(args.train_file, args.test_file, args.smooth, args.test_set_pred)
 
         
