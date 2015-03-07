@@ -349,19 +349,32 @@ def train_and_test(train_file, test_file, smooth, out_file):
     # predict from test set and write to file
     predicted_tags = [viterbi(s, lang_mod, lexi_mod) for s in test_words]    
     
-    with open(out_file) as f:
-        for words, tags in test_words, predicted_tags:
-            f.write(words + '\n')
-            f.write(tags + '\n')
-            
+    print test_words    
+    print predicted_tags
+    print test_tags
+    
     correct = 0
     total = 0
-     
-    for predicts, tags in predicted_tags, test_tags:
-        total = total + len(tags)
-        for p, t in predicts, tags:
-            correct = correct + (p == t)
-    print 'Accuracy: ' + correct/total
+    
+    with open(out_file, 'w+') as f:
+        if len(test_words) > 1 and len(predicted_tags) > 1:
+            for words, tags in test_words, predicted_tags:
+                total = total + len(tags)
+                f.write(str(words) + '\n')
+                f.write(str(tags) + '\n')
+                for pred, tag in zip(predicted_tags, test_tags):
+                    correct = correct + (pred == tag)
+        else:
+            # If we're 
+            f.write(str(test_words[0]) + '\n')
+            f.write(str(predicted_tags[0]) + '\n')
+            total = total + len(predicted_tags[0])
+            for pred, tag in zip(predicted_tags[0], test_tags[0]):
+                correct = correct + (pred == tag)
+            
+    print correct
+    print total
+    print 'Accuracy: ' + str(float(correct)/total * 100) + '%' 
     
 #%%
 if __name__ == "__main__":

@@ -1,0 +1,2 @@
+['No', 'it', 'was', "n't", 'Black', 'Monday', 'STOP']
+['UH', 'PRP', 'VBD', 'RB', 'NNP', 'NNP']
