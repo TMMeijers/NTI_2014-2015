@@ -353,7 +353,15 @@ def train_and_test(train_file, test_file, smooth, out_file):
         for words, tags in test_words, predicted_tags:
             f.write(words + '\n')
             f.write(tags + '\n')
-
+            
+    correct = 0
+    total = 0
+    
+    for predicts, tags in predicted_tags, test_tags:
+        total = total + len(tags)
+        for p, t in predicts, tags:
+            correct = correct + (p == t)
+    print 'Accuracy: ' + correct/total
     
 #%%
 if __name__ == "__main__":
