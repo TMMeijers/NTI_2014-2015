@@ -48,6 +48,12 @@ def get_tags_from_sentences(sentences):
     returns each sentence as a list of pos-tags only
     """
     return [[t[1] for t in s] for s in sentences]
+    
+def get_words_from_sentences(sentences):
+    """
+    returns each sentences as a list of words only
+    """
+    return [[t[0] for t in s] for s in sentences]
 
 #%%
 def fix_splitted(splitted):

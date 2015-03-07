@@ -11,7 +11,7 @@ from itertools import chain
 from a1_step1 import make_grams
 from argparse import ArgumentParser
 from collections import Counter
-from pos_parser import add_start_stop_to_sentence, get_tags_from_sentences, pos_file_parser
+from pos_parser import add_start_stop_to_sentence, get_tags_from_sentences, get_words_from_sentences, pos_file_parser
 from sys import exit
 from a1_step3 import gt_smooth, gt_smoothe_min_1
 import sets
@@ -315,6 +315,7 @@ def viterbi_test_run(smooth=False):
     lang_mod = LanguageModel(tags, n, smooth)
     lexi_mod = LexicalModel(sentences, tags, smooth)
     
+    
     path = viterbi('New York is in trouble'.split(), lang_mod, lexi_mod)
     print 'New York is in trouble: ' + str(path)
     
@@ -322,27 +323,37 @@ def viterbi_test_run(smooth=False):
     print 'New York is in KAUDERWELSCH: ' + str(path)
     
 #%%
-def train_and_test(train_file, test_file, smooth, out_file):    
+def train_and_test(train_file, test_file, smooth, out_file):
     sentences = None    
     with open(train_file) as f: 
-        sentences = pos_file_parser(f)
-    if not sentences:
+        train_sentences = pos_file_parser(f)
+    if not train_sentences:
         exit('error parsing sentences')
     
-    tags = get_tags_from_sentences(sentences)
-
+    # Train model
+    train_tags = get_tags_from_sentences(train_sentences)
+    
     n = 3
 
-    lang_mod = LanguageModel(tags, n, smooth)
-    lexi_mod = LexicalModel(sentences, tags, smooth)
+    lang_mod = LanguageModel(train_tags, n, smooth)
+    lexi_mod = LexicalModel(train_sentences, train_tags, smooth)
     
-    path = viterbi('New York is in trouble'.split(), lang_mod, lexi_mod)
-    print 'New York is in trouble: ' + str(path)
-    
-    path = viterbi('New York is in KAUDERWELSCH'.split(), lang_mod, lexi_mod)
-    print 'New York is in KAUDERWELSCH: ' + str(path)    
+    with open(test_file) as f:
+        test_sentences = pos_file_parser(f)
+    if not test_sentences:
+        exit('error parsing sentences')
+        
+    test_tags = get_tags_from_sentences(test_sentences)
+    test_words = get_words_from_sentences(test_sentences)
     
     # predict from test set and write to file
+    predicted_tags = [viterbi(s, lang_mod, lexi_mod) for s in test_words]    
+    
+    with open(out_file) as f:
+        for words, tags in test_words, predicted_tags:
+            f.write(words + '\n')
+            f.write(tags + '\n')
+
     
 #%%
 if __name__ == "__main__":
@@ -350,7 +361,7 @@ if __name__ == "__main__":
     parser.add_argument('-train-set', dest ='train_file', type=str, default=None, help='Path to training file')
     parser.add_argument('-test-set', dest='test_file', type=str, default=None, help='Path to test file')
     parser.add_argument('-smoothing', dest='smooth',type=str, default=None, help='Use good-turing (yes/no)')
-    parser.add_argument('-test-set-predicated', dest='test_set_pred', default=None, type=str, help='Path to file with predictions')
+    parser.add_argument('-test-set-predicted', dest='test_set_pred', default=None, type=str, help='Path to file with predictions')
     args = parser.parse_args()
     
     # INPUT CHECKS 
