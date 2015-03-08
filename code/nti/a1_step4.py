@@ -169,6 +169,7 @@ def viterbi_path_to_list(vit_path):
 #%%
 def viterbi(words, lang_mod, lexi_mod):
     print 'Sentence length: ', len(words)
+    print words
     words += ['STOP']
     start = time.time()
     probs = lang_mod.get_start_probabilites()
@@ -176,6 +177,7 @@ def viterbi(words, lang_mod, lexi_mod):
     path = {}
     
     for (i, w) in enumerate(words):
+        print 'check word: ' + w
         tellis.append({})
         next_probs = []
         new_path = {}
@@ -217,7 +219,9 @@ def viterbi(words, lang_mod, lexi_mod):
                 tellis[i][tags] = max_pr if max_pr else p_total
                 
                 # add possible expansions
+                #print 'get next words'
                 next_probs += lang_mod.next_n_min1_grams(tags)
+                #print 'got them'                
                 
                 if back_pointer:
                     if back_pointer in path:
@@ -352,23 +356,25 @@ def train_and_test(train_file, test_file, smooth, out_file):
     test_words = get_words_from_sentences(test_sentences)
     
     # predict from test set and write to file
+    with open(out_file, 'w') as f:
+        predicted_tags = []
+        for s in test_words:
+            pt = viterbi(s, lang_mod, lexi_mod)
+            f.write(' '.join(s) + '\n')
+            f.write(' '.join(pt) + '\n')
+            f.flush()
+            predicted_tags.append(pt)
+        
+        print "Done with viterbi"
+        
+        correct = 0
+        total = 0
     
-    predicted_tags = [viterbi(s, lang_mod, lexi_mod) for s in test_words]    
-    print "Done with viterbi"
     
-    print test_words    
-    print predicted_tags
-    print test_tags
-    
-    correct = 0
-    total = 0
-    
-    with open(out_file, 'w+') as f:
         if len(test_words) > 1 and len(predicted_tags) > 1:
             for words, predicted, tags in zip(test_words, predicted_tags, test_tags):
                 total = total + len(tags)
-                f.write(str(words) + '\n')
-                f.write(str(predicted) + '\n')
+
                 for tag, pred in zip(tags, predicted):
                     correct = correct + (pred == tag)
         else:
