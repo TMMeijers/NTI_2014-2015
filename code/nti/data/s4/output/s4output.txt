@@ -1,0 +1,4 @@
+['No', 'it', 'was', "n't", 'Black', 'Monday', 'STOP']
+['UH', 'PRP', 'VBD', 'RB', 'NNP', 'NNP']
+['But', 'while', 'the', 'New', 'York', 'Stock', 'Exchange', 'did', "n't", 'fall', 'apart', 'STOP']
+['CC', 'IN', 'DT', 'NNP', 'NNP', 'NNP', 'NNP', 'VBD', 'RB', 'VB', 'RB']

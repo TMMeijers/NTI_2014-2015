@@ -16,6 +16,7 @@ from sys import exit
 from a1_step3 import gt_smooth, gt_smoothe_min_1
 import sets
 from operator import itemgetter
+import time
 
 #%%
 # good trial run
@@ -167,9 +168,10 @@ def viterbi_path_to_list(vit_path):
 
 #%%
 def viterbi(words, lang_mod, lexi_mod):
+    print 'Sentence length: ', len(words)
     words += ['STOP']
+    start = time.time()
     probs = lang_mod.get_start_probabilites()
-
     tellis = []
     path = {}
     
@@ -226,7 +228,7 @@ def viterbi(words, lang_mod, lexi_mod):
                 
         probs = next_probs
         path = new_path
-        
+    print 'viterbi time: ', round((time.time() - start) * 100) / 100, ' seconds'
     if len(tellis[-1]) > 0:
         return viterbi_path_to_list(path[max(tellis[-1].iteritems(), key=itemgetter(1))[0]][1:])
     else:
@@ -324,7 +326,7 @@ def viterbi_test_run(smooth=False):
     
 #%%
 def train_and_test(train_file, test_file, smooth, out_file):
-    sentences = None    
+    sentences = None
     with open(train_file) as f: 
         train_sentences = pos_file_parser(f)
     if not train_sentences:
@@ -343,11 +345,16 @@ def train_and_test(train_file, test_file, smooth, out_file):
     if not test_sentences:
         exit('error parsing sentences')
         
+    # Remove sentences longer than 15
+    test_sentences = [s for s in test_sentences if len(s) < 16]
+        
     test_tags = get_tags_from_sentences(test_sentences)
     test_words = get_words_from_sentences(test_sentences)
     
     # predict from test set and write to file
+    
     predicted_tags = [viterbi(s, lang_mod, lexi_mod) for s in test_words]    
+    print "Done with viterbi"
     
     print test_words    
     print predicted_tags
@@ -358,11 +365,11 @@ def train_and_test(train_file, test_file, smooth, out_file):
     
     with open(out_file, 'w+') as f:
         if len(test_words) > 1 and len(predicted_tags) > 1:
-            for words, tags in test_words, predicted_tags:
+            for words, predicted, tags in zip(test_words, predicted_tags, test_tags):
                 total = total + len(tags)
                 f.write(str(words) + '\n')
-                f.write(str(tags) + '\n')
-                for pred, tag in zip(predicted_tags, test_tags):
+                f.write(str(predicted) + '\n')
+                for tag, pred in zip(tags, predicted):
                     correct = correct + (pred == tag)
         else:
             # If we're testing only one sentence
@@ -371,10 +378,8 @@ def train_and_test(train_file, test_file, smooth, out_file):
             total = total + len(predicted_tags[0])
             for pred, tag in zip(predicted_tags[0], test_tags[0]):
                 correct = correct + (pred == tag)
-            
-    print correct
-    print total
-    print 'Accuracy: ' + str(float(correct)/total * 100) + '%' 
+                
+    print 'Accuracy: ' + str(round(float(correct)/total * 10000) / 100) + '%' 
     
 #%%
 if __name__ == "__main__":
