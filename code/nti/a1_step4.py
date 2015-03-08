@@ -234,7 +234,7 @@ def viterbi(words, lang_mod, lexi_mod):
      
 #%%
 def test(smoothe):
-    with open('data/s3/simple.pos') as f: 
+    with open('data/s4/simple.pos') as f: 
         sentences = pos_file_parser(f)
     if not sentences:
         exit('error parsing sentences')
@@ -304,7 +304,7 @@ def test(smoothe):
     
 #%%
 def viterbi_test_run(smooth=False):
-    with open('data/s3/WSJ02-21.pos') as f:
+    with open('data/s4/WSJ02-21.pos') as f:
         sentences = pos_file_parser(f)
     if not sentences:
         exit('error parsing sentences')
