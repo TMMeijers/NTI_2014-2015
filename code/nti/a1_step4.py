@@ -365,7 +365,7 @@ def train_and_test(train_file, test_file, smooth, out_file):
                 for pred, tag in zip(predicted_tags, test_tags):
                     correct = correct + (pred == tag)
         else:
-            # If we're 
+            # If we're testing only one sentence
             f.write(str(test_words[0]) + '\n')
             f.write(str(predicted_tags[0]) + '\n')
             total = total + len(predicted_tags[0])
