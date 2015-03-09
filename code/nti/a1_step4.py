@@ -45,14 +45,12 @@ class LanguageModel:
         cond_prob([t1,t2,t3]) = P([t3|t2,t1]) = count('t1 t2 t3')/count('t1 t2')
         """        
         t_all = ' '.join(tags)
-        if t_all in self.n_grams: 
+        if not self.smoothed: 
             p_all = self.n_grams[t_all]
             p_rest = self.n_min1_grams[' '.join(tags[:-1])]
             return float(p_all) / p_rest if p_rest else 0.0
-        elif self.smoothed:
-            return float(self.N[1])/(self.N[0]*len(self.n_grams))
         else:
-            return 0.0
+            return float(self.N[1])/(self.N[0]*len(self.n_grams))
         
     def next_n_min1_grams(self, n_min1_gram):
         """
@@ -122,7 +120,7 @@ class LexicalModel:
         """
         wtpair = ' '.join(word_tag_pair)
         p_rest = self.unigrams[word_tag_pair[1]]        
-        if wtpair in self.word_tag_pairs:
+        if not self.smoothed:
             p_all = self.word_tag_pairs[wtpair]
             return float(p_all) / p_rest if p_rest else 0.0
         
