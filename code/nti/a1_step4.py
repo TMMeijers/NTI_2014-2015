@@ -376,7 +376,7 @@ def train_and_test(train_file, test_file, smooth, out_file):
         for s in test_words:
             pt = viterbi(s, lang_mod, lexi_mod)
             #print pt
-            f.write(' '.join(s) + '\n')
+            f.write(' '.join(s[:-1]) + '\n')
             f.write(' '.join(pt) + '\n')
             #f.flush()
             predicted_tags.append(pt)
