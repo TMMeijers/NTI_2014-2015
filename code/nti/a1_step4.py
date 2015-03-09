@@ -181,6 +181,8 @@ def viterbi(words, lang_mod, lexi_mod):
         tellis.append({})
         next_probs = []
         new_path = {}
+        highest_prob = -1.0
+        highest_tag = None
         for p in probs:
             tags = p[0]
             p_tags = p[1]
@@ -202,7 +204,7 @@ def viterbi(words, lang_mod, lexi_mod):
             # zero Probs
             if p_total:
                 back_pointer = max_pr = None
-                
+
                 if i > 0:
                     # find maximum value from one step back in trellis
                     for os, o_os in tellis[i - 1].iteritems():
@@ -214,25 +216,38 @@ def viterbi(words, lang_mod, lexi_mod):
                                 max_pr = pr
                                 # keep back pointer
                                 back_pointer = os
+                                
+                if p_total > highest_prob:
+                    highest_tag = tags
+                    highest_prob = p_total
 
                 # write into tellis the max probability for later retrieval
                 tellis[i][tags] = max_pr if max_pr else p_total
                 
                 # add possible expansions
                 #print 'get next words'
-                next_probs += lang_mod.next_n_min1_grams(tags)
+                #if i == 0:
+                    #next_probs += lang_mod.next_n_min1_grams(tags)
                 #print 'got them'                
                 
                 if back_pointer:
+                    #next_probs += lang_mod.next_n_min1_grams(tags)
                     if back_pointer in path:
                         conc = path[back_pointer] + [back_pointer]
                         new_path[tags] = conc
                     else:
                         new_path[tags] = [back_pointer]
-                
+        # end for p in probs
+        if highest_tag:
+            next_probs += lang_mod.next_n_min1_grams(highest_tag)
         probs = next_probs
+        #print probs
         path = new_path
     print 'viterbi time: ', round((time.time() - start) * 100) / 100, ' seconds'
+
+    #for hk in tellis:
+    #    print hk
+    
     if len(tellis[-1]) > 0:
         return viterbi_path_to_list(path[max(tellis[-1].iteritems(), key=itemgetter(1))[0]][1:])
     else:
@@ -360,6 +375,7 @@ def train_and_test(train_file, test_file, smooth, out_file):
         predicted_tags = []
         for s in test_words:
             pt = viterbi(s, lang_mod, lexi_mod)
+            print pt
             f.write(' '.join(s) + '\n')
             f.write(' '.join(pt) + '\n')
             f.flush()

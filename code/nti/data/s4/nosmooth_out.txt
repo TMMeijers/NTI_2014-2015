@@ -1,8 +1,328 @@
 No it was n't Black Monday STOP
-UH PRP VBD RB NNP NNP
+DT PRP VBD RB JJ NNP
 The finger-pointing has already begun STOP
 DT NN VBZ RB VBN
 The equity market was illiquid STOP
 DT NN NN VBD JJ
 When the dollar is in a free-fall even central banks ca n't stop it STOP
 
+Speculators are calling for a degree of liquidity that is not there in the market STOP
+NNS VBP VBG IN DT NN IN NN IN VBZ RB RB IN DT NN
+Final-hour trading accelerated to 108.1 million shares a record for the Big Board STOP
+
+At the end of the day 251.2 million shares were traded STOP
+IN DT NN IN DT NN CD CD NNS VBD VBN
+The Dow Jones industrials closed at 2569.26 STOP
+
+The Dow fell 22.6 % on Black Monday STOP
+DT NNP VBD CD NN IN NNP NNP
+Several traders could be seen shaking their heads when the news flashed STOP
+JJ NNS MD VB VBN VBG PRP$ NNS WRB DT NN VBD
+At this point the Dow was down about 35 points STOP
+IN DT NN DT NNP VBD RP IN CD NNS
+The market crumbled STOP
+DT NN VBD
+These stocks eventually reopened STOP
+DT NNS RB VBN
+Most of the stock selling pressure came from Wall Street professionals including computer-guided program traders STOP
+JJS IN DT NN VBG NN VBD IN NNP NNP NNS VBG JJ NN NNS
+Traders said most of their major institutional investors on the other hand sat tight STOP
+
+As a result the link between the futures and stock markets ripped apart STOP
+IN DT NN DT NN IN DT NNS CC NN NNS VBD RB
+The futures halt was even assailed by Big Board floor traders STOP
+DT NNS VBP VBD RB VBD IN NNP NNP NN NNS
+It screwed things up said one major specialist STOP
+PRP VBN NNS IN VBD CD JJ NN
+We did n't even get a chance to do the programs we wanted to do STOP
+PRP VBD RB RB VB DT NN TO VB DT NNS PRP VBD TO VB
+But stocks kept falling STOP
+CC NNS VBD VBG
+The Dow industrials were down 55 points at 3 p.m. before the futures-trading halt STOP
+DT NNP NNS VBD RB CD NNS IN CD NN IN DT JJ NN
+Big Board Chairman John J. Phelan said yesterday the circuit breaker worked well mechanically STOP
+NNP NNP NNP NNP NNP NNP VBD NN DT NN NN VBD RB RB
+Buyers stepped in to the futures pit STOP
+NNS VBD IN TO DT NNS NN
+During this time small investors began ringing their brokers wondering whether another crash had begun STOP
+IN DT NN JJ NNS VBD VBG PRP$ NNS VBG IN DT NN VBD VBN
+I have a hunch that this particular decline today is something more ado about less STOP
+
+And I think a lot of people will harp on program trading STOP
+
+It 's going to bring the debate right back to the forefront STOP
+PRP VBZ VBG TO VB DT NN NN RB TO DT NN
+But there were no buyers STOP
+CC EX VBD DT NNS
+Stock-index futures contracts settled at much lower prices than indexes of the stock market itself STOP
+NN NNS NNS VBD IN JJ JJR NNS IN NNS IN DT NN NN PRP
+But nobody knows at what level the futures and stocks will open today STOP
+CC NN VBZ IN WP NN DT NNS CC NNS MD VB NN
+The Big Board 's Mr. Grasso said Our systemic performance was good STOP
+DT NNP NNP POS NNP NNP VBD PRP$ JJ NN VBD JJ
+But the exchange will look at the performance of all specialists in all stocks STOP
+CC DT NN MD VB IN DT NN IN DT NNS IN DT NNS
+See related story Fed Ready to Inject Big Funds WSJ Oct. 16 1989 STOP
+
+See related story Fed Is Prepared To Offer Banks Massive Funds WSJ Oct. 16 1989 STOP
+
+Just thought you 'd like to know STOP
+RB VBN PRP MD VB TO VB
+George Morton STOP
+NNP NNP
+San Diego STOP
+NNP NNP
+Hooker 's philosophy was to build and sell STOP
+NNP POS NN VBD TO VB CC VB
+We want to build and hold STOP
+PRP VBP TO VB CC VB
+Hoare Govett is acting as the consortium 's investment bankers STOP
+
+The Merksamer chain is currently being offered for sale by First Boston Corp STOP
+DT NNP NN VBZ RB VBG VBN IN NN IN NNP NNP NNP
+Managed properly and with a long-term outlook these can become investment-grade quality properties STOP
+
+The week 's total was up 6.2 % from 274,963 tons a year earlier STOP
+
+The year-to-date total was 12,006,883 tons up 7.8 % from 11,141,711 tons a year earlier STOP
+
+The bills will be dated Oct. 26 and will mature Oct. 25 1990 STOP
+DT NNS MD VB VBN NNP CD CC MD VB NNP CD CD
+They will be available in minimum denominations of 10,000 STOP
+PRP MD VB JJ IN JJ NNS IN CD
+Unlike the weekend before Black Monday the funds were n't swamped with heavy withdrawal requests STOP
+IN DT NN IN NNP NNP DT NNS VBD RB VBN IN JJ NN NNS
+This feels more like a one-shot deal STOP
+DT VBZ JJR IN DT JJ NN
+People are n't panicking STOP
+NNS VBP RB VBG
+The test may come today STOP
+DT NN MD VB NN
+Friday 's stock market sell-off came too late for many investors to act STOP
+NNP POS NN NN NN VBD RB JJ IN JJ NNS TO VB
+But fund managers say they 're ready STOP
+CC NN NNS VBP PRP VBP JJ
+Many have raised cash levels which act as a buffer against steep market declines STOP
+JJ VBP VBN NN NNS WDT VBP IN DT NN IN JJ NN NNS
+Not all funds have raised cash levels of course STOP
+RB DT NNS VBP VBN NN NNS IN NN
+Also persistent redemptions would force some fund managers to dump stocks to raise cash STOP
+RB JJ NNS MD VB DT NN NNS TO VB NNS TO VB NN
+Many fund managers argue that now 's the time to buy STOP
+JJ NN NNS VBP IN RB VBZ DT NN TO VB
+Major mutual-fund groups said phone calls were arriving at twice the normal weekend pace yesterday STOP
+NNP JJ NNS VBD NN NNS VBD VBG IN RB DT JJ NN NN NN
+But most investors were seeking share prices and other information STOP
+CC JJS NNS VBD VBG NN NNS CC JJ NN
+Trading volume was only modestly higher than normal STOP
+NNP NN VBD RB RB JJR IN JJ
+Still fund groups are n't taking any chances STOP
+RB NN NNS VBP RB VBG DT NNS
+Fidelity on Saturday opened its 54 walk-in investor centers across the country STOP
+
+The centers normally are closed through the weekend STOP
+DT NNS RB VBP VBN IN DT NN
+T. Rowe Price Associates Inc. increased its staff of phone representatives to handle investor requests STOP
+NNP NNP NNP NNPS NNP VBD PRP$ NN IN NN NNS TO VB NN NNS
+The Baltimore-based group noted that some investors moved money from stock funds to money-market funds STOP
+DT JJ NN VBD IN DT NNS VBD NN IN NN NNS TO JJ NNS
+The Janus Group had a similar recording for investors STOP
+
+Several fund managers expect a rough market this morning before prices stabilize STOP
+JJ NN NNS VBP DT JJ NN DT NN IN NNS VBP
+This is not a major crash she said STOP
+DT VBZ RB DT JJ NN PRP VBD
+She added If they all were bullish I 'd really be upset STOP
+PRP VBD IN PRP DT VBD JJ PRP MD RB VB VBN
+This time I do n't think we 'll get a panic reaction STOP
+DT NN PRP VBP RB VB PRP MD VB DT NN NN
+Now those routes are n't expected to begin until Jan STOP
+RB DT NNS VBP RB VBN TO VB IN NNP
+Those too are almost certain to arrive late STOP
+DT RB VBP RB JJ TO VB JJ
+It also is sure to help the machinists put added pressure on the company STOP
+PRP RB VBZ JJ TO VB DT NNS VBD VBN NN IN DT NN
+I do n't think their customers would like it very much STOP
+PRP VBP RB VB PRP$ NNS MD VB PRP RB RB
+No date has yet been set to get back to the bargaining table STOP
+DT NN VBZ RB VBN VBN TO VB RP TO DT NN NN
+The investment community for one has been anticipating a speedy resolution STOP
+DT NN NN IN CD VBZ VBN VBG DT JJ NN
+Still he said it 's possible that the strike could last considerably longer STOP
+RB PRP VBD PRP VBZ JJ IN DT NN MD VB RB RBR
+I would n't expect an immediate resolution to anything STOP
+PRP MD RB VB DT JJ NN TO NN
+In separate developments STOP
+IN JJ NNS
+The union is continuing to work through its expired contract however STOP
+DT NN VBZ VBG TO VB IN PRP$ VBN NN RB
+The accord expired yesterday STOP
+DT NN VBD NN
+Pratt & Whitney is a unit of United Technologies Inc STOP
+NNP CC NNP VBZ DT NN IN NNP NNPS NNP
+Martinair Holland is based in Amsterdam STOP
+
+Bridget O'Brian contributed to this article STOP
+
+The projects are big STOP
+DT NNS VBP JJ
+They can be 1 billion plus Mr. Richardson said STOP
+PRP MD VB CD CD CC NNP NNP VBD
+Our long suit is our proven ability to operate power plants he said STOP
+PRP$ JJ NN VBZ PRP$ JJ NN TO VB NN NNS PRP VBD
+CONCORDE trans-Atlantic flights are 2,400 to Paris and 3,200 to London STOP
+
+In a Centennial Journal article Oct. 5 the fares were reversed STOP
+IN DT NNP NNP NN NNP CD DT NNS VBD VBN
+Diamond Shamrock Offshore Partners said it had discovered gas offshore Louisiana STOP
+
+Diamond Shamrock is the operator with a 100 % interest in the well STOP
+
+Kaufman & Broad a home building company declined to identify the institutional investors STOP
+NNP CC NNP DT NN NN NN VBD TO VB DT JJ NNS
+We usually operate in that conservative manner STOP
+PRP RB VBP IN DT JJ NN
+But now prices have nose-dived and Quantum 's profit is plummeting STOP
+CC RB NNS VBP VBD CC NNP POS NN VBZ VBG
+Pricing cycles to be sure are nothing new for plastics producers STOP
+NN NNS TO VB JJ VBP NN JJ IN NNS NNS
+Now we 're at the bottom of the heap STOP
+RB PRP VBP IN DT NN IN DT NN
+In the U.S. polyethylene market Quantum has claimed the largest share about 20 % STOP
+IN DT NNP NN NN NNP VBZ VBN DT JJS NN IN CD NN
+China which had been putting in huge orders for polyethylene abruptly halted them STOP
+NNP WDT VBD VBN VBG IN JJ NNS IN NN RB VBD PRP
+People were even hoarding bags he says STOP
+NNS VBD RB NN NNS PRP VBZ
+Now producers hope prices have hit bottom STOP
+RB NNS VBP NNS VBP VBN JJ
+Some say November STOP
+DT VBP NNP
+I say 1992 STOP
+PRP VBP CD
+A quick turnaround is crucial to Quantum because its cash requirements remain heavy STOP
+DT JJ NN VBZ JJ TO NNP IN PRP$ NN NNS VBP JJ
+Some analysts saw the payment as an effort also to dispel takeover speculation STOP
+DT NNS VBD DT NN IN DT NN RB TO VB NN NN
+But others came away thinking he had given something less than his usual straight-from-the-shoulder performance STOP
+
+On top of everything else Quantum confronts a disaster at its plant in Morris Ill STOP
+IN JJ IN NN RB NNP VBZ DT NN IN PRP$ NN IN NNP NNP
+Then a second explosion occurred STOP
+RB DT JJ NN VBD
+Two workers died and six remain in the hospital STOP
+CD NNS VBD CC CD VBP IN DT NN
+And then you still have to negotiate STOP
+CC RB PRP RB VBP TO VB
+Not everything looks grim for Quantum STOP
+RB NN VBZ JJ IN NNP
+By lifting ethylene production the expansion will also lower the company 's raw material costs STOP
+IN VBG NN NN DT NN MD RB VB DT NN POS JJ NN NNS
+Quantum is also tightening its grip on its one large business outside chemicals propane marketing STOP
+NNP VBZ RB VBG PRP$ NN IN PRP$ CD JJ NN IN NNS NN NN
+Petrolane is the second-largest propane distributor in the U.S STOP
+NNP VBZ DT JJ NN NN IN DT NNP
+The largest Suburban Propane was already owned by Quantum STOP
+
+Still Quantum has a crisis to get past right now STOP
+RB NNP VBZ DT NN TO VB JJ NN RB
+Some analysts speculate the weakening stock may yet attract a suitor STOP
+DT NNS VBP DT NN NN MD RB VB DT NN
+The studies on closing the unit could n't be completed until now he said STOP
+DT NNS IN VBG DT NN MD RB VB VBN IN RB PRP VBD
+The group 's president Peter Chrisanthopoulos was n't in his office Friday afternoon to comment STOP
+
+But its quota has been as high as 6.9 % in 1984 STOP
+CC PRP$ NN VBZ VBN IN JJ IN CD NN IN CD
+The balance is supplied by a host of smaller exporters such as Australia and Venezuela STOP
+DT NN VBZ VBN IN DT NN IN JJR NNS JJ IN NNP CC NNP
+Revenue totaled 5 million STOP
+NNP VBD CD CD
+Measuring cups may soon be replaced by tablespoons in the laundry room STOP
+
+They do n't want to get caught again says one industry watcher STOP
+
+A P&G spokeswoman confirmed that shipments to Phoenix started late last month STOP
+DT NNP NN VBD IN NNS TO NNP VBD JJ JJ NN
+She said the company will study results from this market before expanding to others STOP
+PRP VBD DT NN MD VB NNS IN DT NN IN VBG TO NNS
+Superconcentrates are n't entirely new for P&G STOP
+
+The company introduced a superconcentrated Lemon Cheer in Japan after watching the success of Attack STOP
+
+But with so many brands vying for space that 's no longer the case STOP
+CC IN RB JJ NNS VBG IN NN IN VBZ DT RBR DT NN
+Then retailers will probably push the less-established brands out altogether he says STOP
+
+It also has a product-testing facility in California STOP
+
+This is something P&G would do with or without Kao says Mr. Zurkuhlen STOP
+DT VBZ NN NNP MD VB IN CC IN NNP VBZ NNP NNP
+How such remarks translate into policy wo n't become clear for months STOP
+WRB JJ NNS VB IN NN MD RB VB JJ IN NNS
+Many called it simply a contrast in styles STOP
+
+But some saw it as a classic negotiating tactic STOP
+CC DT VBD PRP IN DT JJ NN NN
+I do n't feel very ferocious STOP
+PRP VBP RB VB RB JJ
+I do n't feel either hard or soft STOP
+PRP VBP RB VB DT JJ CC JJ
+I feel committed to the program of opening markets and expanding trade STOP
+PRP VBP VBN TO DT NN IN VBG NNS CC VBG NN
+She highlighted exclusionary business practices that the U.S. government has identified STOP
+PRP VBD JJ NN NNS WDT DT NNP NN VBZ VBN
+The U.S. share of the Japanese market has been stuck around 10 % for years STOP
+DT NNP NN IN DT JJ NN VBZ VBN VBN IN CD NN IN NNS
+But she stressed I am against managed trade STOP
+CC PRP VBD PRP VBP IN VBN NN
+I will not enter into an agreement that stipulates to a percentage of the market STOP
+PRP MD RB VB IN DT NN IN VBZ TO DT NN IN DT NN
+The company did n't break out its fourth-quarter results STOP
+DT NN VBD RB VB RP PRP$ JJ NNS
+Closely held Morris Communications is based in Augusta Ga STOP
+RB VBN NNP NNPS VBZ VBN IN NNP NNP
+The units that filed the suit are Southeastern Newspapers Corp. and Florida Publishing Co STOP
+DT NNS IN VBN DT NN VBP NNP NNS NNP CC NNP NNP NNP
+Terms were n't disclosed STOP
+NNS VBD RB VBN
+A spokeswoman said Sulka operates a total of seven stores in the U.S. and overseas STOP
+
+Syms operates 25 off-price apparel stores in the U.S STOP
+
+The oil industry 's middling profits could persist through the rest of the year STOP
+DT NN NN POS JJ NNS MD VB IN DT NN IN DT NN
+He did n't forecast Phillips 's results STOP
+PRP VBD RB VBN NNP POS NNS
+So too many analysts predict will Exxon Corp. Chevron Corp. and Amoco Corp STOP
+
+It has plunged 13 % since July to around 26 cents a pound STOP
+PRP VBZ VBN CD NN IN NNP TO RB CD NNS DT NN
+A year ago ethylene sold for 33 cents peaking at about 34 cents last December STOP
+DT NN RB NN VBD IN CD NNS VBG IN IN CD NNS JJ NNP
+A big reason for the chemical price retreat is overexpansion STOP
+
+Companies added capacity furiously STOP
+NNS VBD NN RB
+Third-quarter profits from gasoline were weaker STOP
+JJ NNS IN NN VBD JJR
+The excess supply pushed gasoline prices down in that period STOP
+DT JJ NN VBD NN NNS RB IN DT NN
+In addition crude oil prices were up some from a year earlier further pressuring profitability STOP
+IN NN NN NN NNS VBD RP DT IN DT NN RBR JJ VBG NN
+During the 1988 second half many companies posted record gasoline and chemical profits STOP
+IN DT CD JJ NN JJ NNS VBD NN NN CC NN NNS
+Demand has been much stronger than anticipated and it typically accelerates in the fourth quarter STOP
+NN VBZ VBN RB JJR IN VBN CC PRP RB VBZ IN DT JJ NN
+While oil prices have been better than expected natural gas prices have been worse STOP
+IN NN NNS VBP VBN RBR IN VBN JJ NN NNS VBP VBN JJR
+In the third quarter they averaged about 5 % less than they were in 1988 STOP
+IN DT JJ NN PRP VBD RB CD NN JJR IN PRP VBD IN CD
+The main reason remains weather STOP
+DT JJ NN VBZ NN
+This summer on the other hand had milder weather than usual STOP
+
+C. Olivetti & Co. supplied militarily valuable technology to the Soviets STOP
+NNP NNP CC NNP VBD RB JJ NN TO DT NNPS
+Olivetti reportedly began shipping these tools in 1984 STOP
+NNP RB VBD VBG DT NNS IN CD
