@@ -419,7 +419,7 @@ if __name__ == "__main__":
         exit('No training file specified (-train-set)')
     if not args.smooth:
         parser.print_help()
-        exit('You must indiciate wether you want to use smoothing or not (-smooth))')
+        exit('You must indiciate whether you want to use smoothing or not (-smooth))')
     if not args.test_file:
         parser.print_help()
         exit('No test set file specified (-test-file)')
