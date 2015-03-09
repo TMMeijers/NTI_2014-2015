@@ -326,3 +326,191 @@ C. Olivetti & Co. supplied militarily valuable technology to the Soviets STOP
 NNP NNP CC NNP VBD RB JJ NN TO DT NNPS
 Olivetti reportedly began shipping these tools in 1984 STOP
 NNP RB VBD VBG DT NNS IN CD
+Italian President Francesco Cossiga promised a quick investigation into whether Olivetti broke Cocom rules STOP
+
+However these agencies generally agree that the West should be cautious about any further liberalization STOP
+RB DT NNS RB VBP IN DT NNP MD VB JJ IN DT JJ NN
+Officials at Drexel said they had n't seen the suit and thus could n't comment STOP
+NNS IN NNP VBD PRP VBD RB VBN DT NN CC RB MD RB VB
+In addition to 33 million compensatory damages the suit seeks 100 million in punitive damages STOP
+IN NN TO CD CD JJ NNS DT NN VBZ CD CD IN JJ NNS
+Northview officials could n't be located STOP
+
+However the agreement was canceled in June 1984 STOP
+RB DT NN VBD VBN IN NNP CD
+Ideal 's directors rejected that offer although they said they endorsed the merger proposal STOP
+NNP POS NNS VBD IN NN IN PRP VBD PRP VBD DT NN NN
+Under the agreement HOFI will own 87.2 % of the combined company STOP
+
+Ideal 's current operations will represent about 39.2 % of the combined company STOP
+NNP POS JJ NNS MD VB IN CD NN IN DT JJ NN
+The transaction is subject to a definitive agreement and approval by Ideal shareholders STOP
+DT NN VBZ JJ TO DT JJ NN CC NN IN NNP NNS
+Ideal said it expects to complete the transaction early next year STOP
+NNP VBD PRP VBZ TO VB DT NN RB JJ NN
+And they 're likely to stay that way for months to come analysts say STOP
+CC PRP VBP RB TO VB IN NN IN NNS TO VB NNS VBP
+That would be the lowest level since the early 1970s STOP
+DT MD VB DT JJS NN IN DT JJ NNS
+Stocks were 698 million bushels on May 31 of this year STOP
+
+Until then limited stocks are likely to keep prices near the 4-a-bushel level analysts say STOP
+
+In July the CBOT ordered Ferruzzi Finanziaria S.p STOP
+
+A. to liquidate futures positions equal to about 23 million bushels of soybeans STOP
+NNP TO VB NNS NNS VBP TO RB CD CD NNS IN NNS
+Ferruzzi has denied it was trying to manipulate the soybean futures market STOP
+NNP VBZ VBN PRP VBD VBG TO VB DT NN NNS NN
+That figure climbs to about 47 % in wheat-growing portions of Kansas he said STOP
+
+Looking ahead to other commodity markets this week STOP
+VBG RB TO JJ NN NNS DT NN
+Orange Juice STOP
+
+It settled with a loss of 4.95 cents at 1.3210 a pound STOP
+
+New York futures prices have dropped significantly from more than 2 a pound at midyear STOP
+NNP NNP NNS NNS VBP VBN RB IN JJR IN CD DT NN IN NN
+Energy STOP
+
+There has been little news to account for such buoyancy in the oil markets STOP
+
+Mr. Spielvogel said he would n't launch a hostile bid STOP
+NNP NNP VBD PRP MD RB VB DT JJ NN
+But otherwise it would undoubtedly come back with an offer by management STOP
+CC RB PRP MD RB VB RB IN DT NN IN NN
+He was brought in to turn around the company STOP
+PRP VBD VBN IN TO VB RP DT NN
+We are n't going to change agencies because of a change in London STOP
+PRP VBP RB VBG TO VB NNS IN IN DT NN IN NNP
+Ad Notes STOP
+NNP NNP
+The account had billed about 6 million in 1988 according to Leading National Advertisers STOP
+DT NN VBD VBN IN CD CD IN CD VBG TO VBG NNP NNPS
+Samsung already owns Korea First Advertising Co. that country 's largest agency STOP
+
+Revenue soared to 117 million from 81.5 million STOP
+
+Revenue rose to 225.5 million from 161.8 million STOP
+
+The company asked for a 15-day extension Sept. 30 when the financial reports were due STOP
+DT NN VBD IN DT JJ NN NNP CD WRB DT JJ NNS VBD JJ
+The patent is related to hyaluronic acid a rooster-comb extract used in eye surgery STOP
+
+All bets are off analysts say because of the shifting ownership of the retail chains STOP
+DT NNS VBP RP NNS VBP IN IN DT VBG NN IN DT JJ NNS
+Retailers are just in disarray STOP
+NNS VBP RB IN NN
+Revenue gained 6 % to 2.55 billion from 2.4 billion STOP
+NNP VBD CD NN TO CD CD IN CD CD
+At Dow Jones & Co. third-quarter net income fell 9.9 % from the year-earlier period STOP
+IN NNP NNP CC NNP JJ NN NN VBD CD NN IN DT JJ NN
+The year-earlier period included a one-time gain of 3.5 million or four cents a share STOP
+DT JJ NN VBD DT JJ NN IN CD CD CC CD NNS DT NN
+Revenue gained 5.3 % to 404.1 million from 383.8 million STOP
+
+Ad linage at the Journal fell 6.1 % in the third quarter STOP
+NNP NN IN DT NNP VBD CD NN IN DT JJ NN
+Affiliated Publications Inc. reversed a year-earlier third quarter net loss STOP
+NNP NNPS NNP VBD DT JJ JJ NN NN NN
+According to analysts profits were also helped by successful cost-cutting measures at Newsweek STOP
+
+GM officials told workers late last week of the following moves STOP
+NNP NNS VBD NNS RB JJ NN IN DT JJ NNS
+Production of full-sized vans will be consolidated into a single plant in Flint Mich STOP
+NNP IN JJ NNS MD VB JJ IN DT JJ NN IN NNP NNP
+The shutdowns will idle about 3,000 Canadian assembly workers and about 2,500 workers in Ohio STOP
+DT NNS MD VB IN CD JJ NN NNS CC RB CD NNS IN NNP
+That announcement left union officials in Van Nuys and Oklahoma City uncertain about their futures STOP
+DT NN VBD NN NNS IN NNP NNP CC NNP NNP JJ IN PRP$ NNS
+He said he believes GM has plans to keep building A-body cars into the mid-1990s STOP
+
+Union officials have taken a beating politically as a result STOP
+NNP NNS VBP VBN DT NN RB IN DT NN
+Canadian investment rules require that big foreign takeovers meet that standard STOP
+JJ NN NNS VBP IN JJ JJ NNS VBP IN JJ
+Both Merieux and Connaught are biotechnology research and vaccine manufacturing concerns STOP
+DT NNP CC NNP VBP NN NN CC NN NN NNS
+The government 's action was unusual STOP
+DT NN POS NN VBD JJ
+Mr. Andre issued the ruling based on a recommendation by Investment Canada STOP
+NNP NNP VBD DT NN VBN IN DT NN IN NNP NNP
+Investment Canada declined to comment on the reasons for the government decision STOP
+NNP NNP VBD TO VB IN DT NNS IN DT NN NN
+The university is considering a settlement proposal made by Connaught STOP
+DT NN VBZ VBG DT NN NN VBD IN NNP
+French state-owned Rhone-Poulenc S.A. holds 51 % of Merieux STOP
+JJ JJ NNP NNP VBZ CD NN IN NNP
+The exchange ratio was never established STOP
+DT NN NN VBD RB VBN
+Weatherford said market conditions led to the cancellation of the planned exchange STOP
+
+Proceeds will be used to eliminate and restructure bank debt STOP
+NNS MD VB VBN TO VB CC VB NN NN
+Weatherford currently has approximately 11.1 million common shares outstanding STOP
+
+In the third quarter of 1988 Merck earned 311.8 million or 79 cents a share STOP
+
+In Rahway N.J. a Merck spokesman said the company does n't make earnings projections STOP
+IN NNP NNP DT NNP NN VBD DT NN VBZ RB VB NNS NNS
+It 's turning out to be a real blockbuster Mr. Sweig said STOP
+
+In last year 's third quarter Lilly earned 171.4 million or 1.20 a share STOP
+
+In Indianapolis Lilly declined comment STOP
+IN NNP NNP VBD NN
+The company was officially merged with Bristol-Myers Co. earlier this month STOP
+DT NN VBD RB VBN IN NNP NNP RBR DT NN
+Bristol-Myers declined to comment STOP
+NNP VBD TO VB
+The strong dollar hurt Pfizer a lot too Mr. Sweig said STOP
+
+In the third quarter last year Pfizer earned 216.8 million or 1.29 a share STOP
+
+In New York the company declined comment STOP
+IN NNP NNP DT NN VBD NN
+Upjohn 's biggest-selling drugs are Xanax a tranquilizer and Halcion a sedative STOP
+
+In Kalamazoo Mich. Upjohn declined comment STOP
+IN NNP NNP NNP VBD NN
+It said analysts had been expecting a small profit for the period STOP
+PRP VBD NNS VBD VBN VBG DT JJ NN IN DT NN
+Revenue is expected to be up modestly from the 26.5 million reported a year ago STOP
+NNP VBZ VBN TO VB RP RB IN DT CD CD VBD DT NN RB
+The company said Mr. Wilson 's resignation was n't related to the sales shortfall STOP
+DT NN VBD NNP NNP POS NN VBD RB VBN TO DT NNS NN
+Relational Technology went public in May 1988 at 14 a share STOP
+
+It fell 1.875 a share Friday to 6.25 a new low in over-the-counter trading STOP
+PRP VBD CD DT NN NNP TO CD DT JJ JJ IN JJ NN
+Its high for the past year was 16.375 a share STOP
+PRP$ JJ IN DT JJ NN VBD CD DT NN
+But Laura Cunningham 's Bronx her childhood Bronx of the '50s is something else altogether STOP
+
+Ms. Cunningham a novelist and playwright has a vivid and dramatically outsized sense of recall STOP
+NNP NNP DT NN CC NN VBZ DT JJ CC RB JJ NN IN NN
+Little Lily as Ms. Cunningham calls herself in the book really was n't ordinary STOP
+NNP NNP IN NNP NNP VBZ PRP IN DT NN RB VBD RB JJ
+Without official knowledge of sex or death we flirted with both she writes STOP
+
+She analyzed families by their sleeping arrangements STOP
+PRP VBD NNS IN PRP$ NN NNS
+They painted the apartment orange pink and white according to her instructions STOP
+PRP VBD DT NN NN JJ CC JJ VBG TO PRP$ NNS
+They came by their strangeness honestly STOP
+
+An L.A. solution explains Mr. Friedman STOP
+DT NNP NN VBZ NNP NNP
+But it does n't take too many lines to figure Harry out STOP
+CC PRP VBZ RB VB RB JJ NNS TO VB NNP IN
+He 's a bore STOP
+PRP VBZ DT VBD
+The 21-square-mile area is contaminated with lead zinc and other metals STOP
+
+The agreement and consent decree are subject to court approval the company said STOP
+DT NN CC NN NN VBP JJ TO NN NN DT NN VBD
+Gulf 's net worth after those transaction must be at least 150 million STOP
+NNP POS JJ NN IN DT NN MD VB IN JJS CD CD
+Where 's the leadership Where 's the guy who can say Enough is enough STOP
+WRB VBZ DT NN WRB 

@@ -168,16 +168,16 @@ def viterbi_path_to_list(vit_path):
 
 #%%
 def viterbi(words, lang_mod, lexi_mod):
-    print 'Sentence length: ', len(words)
-    print words
+    #print 'Sentence length: ', len(words)
+    #print words
     words += ['STOP']
-    start = time.time()
+    #start = time.time()
     probs = lang_mod.get_start_probabilites()
     tellis = []
     path = {}
     
     for (i, w) in enumerate(words):
-        print 'check word: ' + w
+        #print 'check word: ' + w
         tellis.append({})
         next_probs = []
         new_path = {}
@@ -243,7 +243,7 @@ def viterbi(words, lang_mod, lexi_mod):
         probs = next_probs
         #print probs
         path = new_path
-    print 'viterbi time: ', round((time.time() - start) * 100) / 100, ' seconds'
+    #print 'viterbi time: ', round((time.time() - start) * 100) / 100, ' seconds'
 
     #for hk in tellis:
     #    print hk
@@ -375,10 +375,10 @@ def train_and_test(train_file, test_file, smooth, out_file):
         predicted_tags = []
         for s in test_words:
             pt = viterbi(s, lang_mod, lexi_mod)
-            print pt
+            #print pt
             f.write(' '.join(s) + '\n')
             f.write(' '.join(pt) + '\n')
-            f.flush()
+            #f.flush()
             predicted_tags.append(pt)
         
         print "Done with viterbi"
