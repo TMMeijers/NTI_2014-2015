@@ -35,7 +35,7 @@ class LanguageModel:
             self.smoothed = True  
             unigrams = len(list(chain(*[make_grams(add_start_stop_to_sentence(t, 1), 1) for t in tags])))            
             self.N = {i : len([n_gram for n_gram in self.n_grams.values() if n_gram is i]) for i in xrange(6) if i is not 0}
-            self.N[0] = unigrams**2 - len(self.n_grams)
+            self.N[0] = unigrams**3 - len(self.n_grams)
             self.smoothe()          
             self.n_min1_grams = gt_smoothe_min_1(self.n_grams)        
            
