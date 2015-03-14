@@ -28,11 +28,7 @@ def get_sentences(input_file):
     sentences = []
     
     with open(input_file) as f:
-        for line in f:
-            l = line.rstrip('\n')
-            if l:
-                sentences.append(l)
-    return sentences
+    	return [line.rstrip('\n') for line in f if line.rstrip('\n')]
     
     
     
@@ -52,6 +48,7 @@ if __name__ == "__main__":
         exit('No output file specified (-output)')
         
     sentences = get_sentences(args.input_file)
+    print(sentences)
     with open(args.ouput_file, 'w+') as f:
         for s in sentences:
             f.write(binarize(s))
