@@ -129,4 +129,4 @@ if __name__ == "__main__":
     sentences = get_sentences(args.input_file)
     with open(args.output_file, 'w+') as f:
         for s in sentences:
-            f.write(binarize(s) + '\n')
+            f.write(binarize(s) + '\n\n')
