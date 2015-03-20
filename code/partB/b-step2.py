@@ -49,12 +49,10 @@ def markovize_recursive(markov_sen, sub_sen, root, h, v):
         right_sub = ") ".join(splitted_sub_sen[depth:])       
         
     left_sub = left_sub.split()
-    #Vertically markovize the non-terminal/inner rules    
-    newroot = left_sub[0]    
-    if v and root:
-        root.split('^')
-        left_sub[0] = left_sub[0] + '^' + root
-        root = newroot
+    #Vertically markovize the non-terminal/inner rules        
+    if v and root:    
+        left_sub[0] = left_sub[0] + '^' + '^'.join(root.split('^')[:v])
+        root = left_sub[0]
     # If the left part is binarized, add to the result.
     if len(left_sub) is 2:
         markov_sen.append(left_sub)
@@ -64,21 +62,21 @@ def markovize_recursive(markov_sen, sub_sen, root, h, v):
         markov_sen.append([left_sub[0]])
         left_sub = " ".join(left_sub[1:])
         # Recurse on the left part of the sub sentence
-        markov_sen[1] = markovize_recursive(markov_sen[1], left_sub, newroot, h, v)
+        markov_sen[1] = markovize_recursive(markov_sen[1], left_sub, root, h, v)
     # If there is a right part
     if right_sub:
         #Add a new inner-symbol that shows the horizontal markovization
         if "@" in markov_sen[0]:            
             new_inner = markov_sen[0].split('_')
-                       
-            if len(new_inner) == 2:
-                new_inner = markov_sen[0] + "_" + markov_sen[1][0]
+            #Retrieve the last element of the list
+            if len(new_inner) is h+1:                
+                prev_inner = new_inner[2:]
             else:
-                #Retrieve the last element of the list
-                new_inner.reverse()
-                prev_inner = new_inner[0]
-                new_inner.reverse()
-                new_inner = new_inner[0] + "_" + prev_inner + "_" + markov_sen[1][0]
+                prev_inner = new_inner[1:]
+            if prev_inner:
+                new_inner = new_inner[0] + '_' + '_'.join(prev_inner) + "_" + markov_sen[1][0]
+            else:
+                new_inner = new_inner[0] + '_' + markov_sen[1][0]
         else:
             new_inner = "@" + markov_sen[0] + "->_" + markov_sen[1][0].split('^')[0] 
             
@@ -110,9 +108,9 @@ if __name__ == "__main__":
         exit('Input or output file not specified')
     if args.v is 1:
         args.v = 0
-    elif args.v > 2:
+    elif args.v < 0:
         parser.print_help()
-        exit('v can only be 1 or 2')
+        exit('v must be a positive integer')
     if args.h < 0:
         parser.print_help()
         exit('h should be either 0 (for an infinite history) or a positive integer')
