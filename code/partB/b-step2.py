@@ -49,9 +49,10 @@ def markovize_recursive(markov_sen, sub_sen, root, h, v):
         right_sub = ") ".join(splitted_sub_sen[depth:])       
         
     left_sub = left_sub.split()
-    #Vertically markovize the non-terminal/inner rules        
-    if v and root:    
-        left_sub[0] = left_sub[0] + '^' + '^'.join(root.split('^')[:v])
+    #Vertically markovize the non-terminal/inner rules
+    right_root = left_sub[0] + "@"
+    if v and "@" not in root:    
+        left_sub[0] = left_sub[0] + '^' + '^'.join(root.split('^')[:v-1])
         root = left_sub[0]
     # If the left part is binarized, add to the result.
     if len(left_sub) is 2:
@@ -90,7 +91,7 @@ def markovize_recursive(markov_sen, sub_sen, root, h, v):
             return markov_sen
         else:
             #Recurse on the right part of the sub sentence
-            markov_sen[2] = markovize_recursive(markov_sen[2], right_sub, None, h, v)
+            markov_sen[2] = markovize_recursive(markov_sen[2], right_sub, right_root, h, v)
     return markov_sen
 
 #%%
