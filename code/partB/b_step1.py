@@ -99,6 +99,7 @@ def binarize(sen):
     # Activate recursion
     bin_sen = binarize_recursive(bin_sen, sub_sen)
     #Recompile the sentence back to its original but binarized state
+    print(bin_sen)
     return str(bin_sen).replace('[', '(').replace(']', ')').replace("'", "").replace(",", "").replace("+", ",").replace('"',"'")
     
 def get_sentences(input_file):
