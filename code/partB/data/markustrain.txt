@@ -1,0 +1,1 @@
+(ROOT (S (NP (P He)) (VP (V dreamed) (PP (IN of) (NP (D a) (A fresh) (N cherry) (N pie))))))

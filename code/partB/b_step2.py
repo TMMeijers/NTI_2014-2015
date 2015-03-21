@@ -5,6 +5,7 @@ Created on Thu Mar 19 20:26:01 2015
 @author: T.M. Meijers, C.J. Boon, M. Pfundstein
 """
 
+from sexp_parser import tokenize, parse_root
 from b_step1 import get_sentences, binarize, get_depth
 from argparse import ArgumentParser
 from sys import exit
@@ -18,6 +19,12 @@ def markov_init(sentence, h, v):
         return markovize(sentence, h, v)
         
 def markovize(sen, h, v):
+    if v > 1:
+        v_sen = markovize_v(sen, v)
+        sen = make_sentence_from_tree(v_sen)
+    if not h > 0:
+        return sen
+    
     markov_sen = []
     sub_sen = re.search(r'\((.*)\)', sen).group(1).split()
     #Add ROOT to the list
@@ -25,16 +32,55 @@ def markovize(sen, h, v):
     markov_sen.append(root)
     #Cleanup sub sentence to make parsing easier
     sub_sen = " ".join(sub_sen[1:]).replace(",", "+").replace("'", '"')
-    markov_sen = markovize_recursive(markov_sen, sub_sen, root, h, v)
-    return str(markov_sen).replace('[', '(').replace(']', ')').replace("'", "").replace(",", "").replace("+", ",").replace('"',"'")
+
+    markov_sen = markovize_recursive_h(markov_sen, sub_sen, root, h) 
+    return make_sentence_from_tree(markov_sen)
+   
+#%%
+def make_sentence_from_tree(tree):
+    return str(tree).replace('[', '(').replace(']', ')').replace("'", "").replace(",", "").replace("+", ",").replace('"',"'")
+
+#%%
+def markovize_v(sub_sen, v):
+    # parse sexp to tree
+    tree = parse_root(tokenize(sub_sen))
+    # add vertical markovization to tree
+    parse_node(tree, [], 0, v)
+    return write_tree(tree)
+
+#%%
+def parse_node(node, parents, depth, v):
+
+    node_name = node[0] 
+    node_children = node[1] if type(node[1]) is list else []
+
+    if v > 1 and depth > 1 and node_children:
+        node[0] = node[0] + '^' + "-".join(parents[-(v-1):])    
     
-    
-def markovize_recursive(markov_sen, sub_sen, root, h, v):
-    # Find the depth of the current sentence fragment
+    for child in node_children:
+        new_parents = parents + [node_name] if depth > 0 else parents
+        parse_node(child, new_parents, depth + 1, v)
+
+        
+#%%
+def write_tree(node):
+    node_children = node[1] if type(node[1]) is list else []
+    for child in node_children:
+        write_tree(child)
+
+    if node_children:
+        for c in node_children:
+            node.append(c)
+        del node[1]
+
+    return node
+   
+#%%
+def get_left_and_right_sub(sub_sen):
     depth = get_depth(sub_sen)
-    # Initialize left and right part of sentence fragment
     left_sub = ""
     right_sub = ""
+
     #If the sentence is at the top, just go one layer deeper    
     if depth is 0:
         left_sub = re.search(r'\((.*)\)', sub_sen).group(1)
@@ -49,11 +95,17 @@ def markovize_recursive(markov_sen, sub_sen, root, h, v):
         right_sub = ") ".join(splitted_sub_sen[depth:])       
         
     left_sub = left_sub.split()
-    #Vertically markovize the non-terminal/inner rules
+    
+    if not right_sub: right_sub = None
+    return left_sub, right_sub
+
+#%%    
+def markovize_recursive_h(markov_sen, sub_sen, root, h):
+      
+    left_sub, right_sub = get_left_and_right_sub(sub_sen)
+   
     right_root = left_sub[0] + "@"
-    if v and "@" not in root:    
-        left_sub[0] = left_sub[0] + '^' + '^'.join(root.split('^')[:v-1])
-        root = left_sub[0]
+
     # If the left part is binarized, add to the result.
     if len(left_sub) is 2:
         markov_sen.append(left_sub)
@@ -63,7 +115,7 @@ def markovize_recursive(markov_sen, sub_sen, root, h, v):
         markov_sen.append([left_sub[0]])
         left_sub = " ".join(left_sub[1:])
         # Recurse on the left part of the sub sentence
-        markov_sen[1] = markovize_recursive(markov_sen[1], left_sub, root, h, v)
+        markov_sen[1] = markovize_recursive_h(markov_sen[1], left_sub, root, h)
     # If there is a right part
     if right_sub:
         #Add a new inner-symbol that shows the horizontal markovization
@@ -79,7 +131,7 @@ def markovize_recursive(markov_sen, sub_sen, root, h, v):
             else:
                 new_inner = new_inner[0] + '_' + markov_sen[1][0]
         else:
-            new_inner = "@" + markov_sen[0] + "->_" + markov_sen[1][0].split('^')[0] 
+            new_inner = "@" + markov_sen[0] + "->_" + markov_sen[1][0]
             
         markov_sen.append([new_inner])
         right_sub = new_inner + right_sub
@@ -91,7 +143,7 @@ def markovize_recursive(markov_sen, sub_sen, root, h, v):
             return markov_sen
         else:
             #Recurse on the right part of the sub sentence
-            markov_sen[2] = markovize_recursive(markov_sen[2], right_sub, right_root, h, v)
+            markov_sen[2] = markovize_recursive_h(markov_sen[2], right_sub, right_root, h)
     return markov_sen
 
 #%%
