@@ -10,7 +10,7 @@ Created on Sat Mar 21 14:23:56 2015
 # Added own modifications to work for the assignment
 def tokenize(s):
     import re
-    toks = re.compile(' +|[A-Za-z]+|[()]')
+    toks = re.compile(' +|[A-Za-z0-9\.\`\'\:\-\$\#,]+|[()]')
     for match in toks.finditer(s):
         s = match.group(0)
         if s[0] == ' ':

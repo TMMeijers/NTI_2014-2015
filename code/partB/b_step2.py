@@ -21,7 +21,8 @@ def markov_init(sentence, h, v):
 def markovize(sen, h, v):
     if v > 1:
         v_sen = markovize_v(sen, v)
-        sen = make_sentence_from_tree(v_sen)
+        sen = str(v_sen).replace('[', '(').replace(']', ')').replace('\'', '').replace('(,', '(+').replace(',)', '+)').replace(',', '').replace('+', ',')
+
     if not h > 0:
         return sen
     
@@ -34,11 +35,7 @@ def markovize(sen, h, v):
     sub_sen = " ".join(sub_sen[1:]).replace(",", "+").replace("'", '"')
 
     markov_sen = markovize_recursive_h(markov_sen, sub_sen, root, h) 
-    return make_sentence_from_tree(markov_sen)
-   
-#%%
-def make_sentence_from_tree(tree):
-    return str(tree).replace('[', '(').replace(']', ')').replace("'", "").replace(",", "").replace("+", ",").replace('"',"'")
+    return  str(markov_sen).replace('[', '(').replace(']', ')').replace("'", "").replace(",", "").replace("+", ",").replace('"',"'")
 
 #%%
 def markovize_v(sub_sen, v):
@@ -74,7 +71,7 @@ def write_tree(node):
         del node[1]
 
     return node
-   
+    
 #%%
 def get_left_and_right_sub(sub_sen):
     depth = get_depth(sub_sen)
